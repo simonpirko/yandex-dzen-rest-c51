@@ -2,35 +2,43 @@ package by.tms.dzen.yandexdzenrestc51.controller;
 
 import by.tms.dzen.yandexdzenrestc51.Entity.User;
 import by.tms.dzen.yandexdzenrestc51.exception.InvalidException;
+import by.tms.dzen.yandexdzenrestc51.exception.UserNotFoundException;
 import by.tms.dzen.yandexdzenrestc51.repository.UserRepository;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import org.aspectj.weaver.patterns.HasThisTypePatternTriedToSneakInSomeGenericOrParameterizedTypePatternMatchingStuffAnywhereVisitor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
 import javax.validation.Valid;
 
 @RestController
+@Api(tags = "User", description = "Operation about user")
 @RequestMapping("/user")
 public class userController {
 
     @Autowired
     private UserRepository userRepository;
 
-    @GetMapping("/{username}")
-    public ResponseEntity<User> getUser(@PathVariable("username") String username){
+
+    @ApiResponse(responseCode = "404", description = "User not found")
+    @ApiOperation(value = "Get user by user name")
+    @GetMapping(value = "/{username}",produces = "application/json" )
+    public ResponseEntity<User> getUser(@ApiParam(value = "The name that needs to be fetched. Use user1 for testing.",example = "username")@PathVariable("username") String username){
         if (username == null | userRepository.findByUsername(username).isEmpty()){
-            return ResponseEntity.badRequest().build();
+            throw new UserNotFoundException();
         }
         User getUser = userRepository.findByUsername(username).get();
         return ResponseEntity.ok(getUser);
     }
 
+
     @ApiResponse(responseCode = "405", description = "Invalid input")
-    @PostMapping()
-    public ResponseEntity<User> save(@Valid @RequestBody User user, BindingResult bindingResult){
+    @ApiOperation(value = "Create user",notes = "This can only be done by the logged in user.")
+    @PostMapping(produces = "application/json" )
+    public ResponseEntity<User> save(@ApiParam(value = "Created user object", name="body")@Valid @RequestBody User user, BindingResult bindingResult){
         if (bindingResult.hasErrors()){
             throw new InvalidException();
         }
@@ -38,14 +46,17 @@ public class userController {
         return ResponseEntity.ok(save);
     }
 
+
+    @ApiResponse(responseCode = "404", description = "User not found")
     @ApiResponse(responseCode = "405", description = "Invalid input")
-    @PatchMapping("/{username}")
-    public ResponseEntity<User> update(@PathVariable("username") String username, @Valid @RequestBody User user, BindingResult bindingResult){
+    @ApiOperation(value = "Updated user", notes = "This can only be done by the logged in user.")
+    @PatchMapping(value = "/{username}",produces = "application/json" )
+    public ResponseEntity<User> update(@ApiParam(value = "username that need to be updated",example = "username")@PathVariable("username") String username, @ApiParam(value = "Updated user object",example = "user")@Valid @RequestBody User user, BindingResult bindingResult){
         if (bindingResult.hasErrors()){
             throw new InvalidException();
         }
         if (username == null | userRepository.findByUsername(username).isEmpty()){
-            return ResponseEntity.badRequest().build();
+            throw new UserNotFoundException();
         }
         User update = userRepository.findByUsername(username).get();
         user.setId(update.getId());
@@ -53,9 +64,13 @@ public class userController {
         return ResponseEntity.ok(update);
     }
 
-    @DeleteMapping("/{username}")
-    public void deleteUser(@PathVariable("username") String username){
+
+    @ApiResponse(responseCode = "404", description = "User not found")
+    @ApiOperation(value = "Delete user", notes = "This can only be done by the logged in user.")
+    @DeleteMapping(value = "/{username}",produces = "application/json" )
+    public void deleteUser(@ApiParam(value = "username that need to be deleted",example = "username")@PathVariable("username") String username){
         if (username == null | userRepository.findByUsername(username).isEmpty()){
+            throw new UserNotFoundException();
         }
         User user = userRepository.findByUsername(username).get();
         userRepository.delete(user);
