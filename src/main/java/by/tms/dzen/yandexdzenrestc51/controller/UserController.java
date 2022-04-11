@@ -17,7 +17,7 @@ import javax.validation.Valid;
 @RestController
 @Api(tags = "User", description = "Operation about user")
 @RequestMapping("/user")
-public class userController {
+public class UserController {
 
     @Autowired
     private UserRepository userRepository;
