@@ -39,7 +39,7 @@ public class userController {
     @ApiOperation(value = "Create user",notes = "This can only be done by the logged in user.")
     @PostMapping(produces = "application/json" )
     public ResponseEntity<User> save(@ApiParam(value = "Created user object", name="body")@Valid @RequestBody User user, BindingResult bindingResult){
-        if (bindingResult.hasErrors()){
+        if (bindingResult.hasErrors()|userRepository.findByUsername(user.getUsername()).isPresent()){
             throw new InvalidException();
         }
         User save = userRepository.save(user);
