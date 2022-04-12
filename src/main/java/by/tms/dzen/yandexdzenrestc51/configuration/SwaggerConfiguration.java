@@ -19,7 +19,7 @@ public class SwaggerConfiguration {
                 .apiInfo(apiInfo())
                 .useDefaultResponseMessages(false)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("by.tms.dzen.yandexdzenrestc51"))
+                .apis(RequestHandlerSelectors.basePackage("by.tms.dzen.yandexdzenrestc51.controller"))
                 .paths(PathSelectors.any())
                 .build();
     }
