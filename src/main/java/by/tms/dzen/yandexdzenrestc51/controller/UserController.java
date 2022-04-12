@@ -60,6 +60,7 @@ public class UserController {
             throw new UserNotFoundException();
         }
         User update = userRepository.findByUsername(username).get();
+
         user.setId(update.getId());
         userRepository.save(user);
         return ResponseEntity.ok(update);
