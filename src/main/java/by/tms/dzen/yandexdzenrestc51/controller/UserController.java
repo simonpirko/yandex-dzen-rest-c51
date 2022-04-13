@@ -51,7 +51,7 @@ public class UserController {
     @ApiResponse(responseCode = "404", description = "User not found")
     @ApiResponse(responseCode = "405", description = "Invalid input")
     @ApiOperation(value = "Updated user", notes = "This can only be done by the logged in user.")
-    @PatchMapping(value = "/{username}", produces = "application/json")
+    @PutMapping(value = "/{username}", produces = "application/json")
     public ResponseEntity<User> update(@ApiParam(value = "username that need to be updated", example = "username") @PathVariable("username") String username, @ApiParam(value = "Updated user object", example = "user") @Valid @RequestBody User user, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new InvalidException();
