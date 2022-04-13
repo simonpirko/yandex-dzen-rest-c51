@@ -4,17 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Data
-@Entity
+//@Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class Сomment {
+public class Сomments {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,7 +19,6 @@ public class Сomment {
     private LocalDateTime createDate;
     private long countLike;
     private long countDizlike;
-
 
 
 }

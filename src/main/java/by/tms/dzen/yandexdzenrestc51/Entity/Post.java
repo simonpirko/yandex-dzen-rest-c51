@@ -5,6 +5,7 @@ import by.tms.dzen.yandexdzenrestc51.enums.PostType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.engine.internal.Cascade;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -33,8 +34,12 @@ public class Post {
     @NotNull
     private PostType postType;
 
-    @OneToMany
-    private List<Tag> tagList;
-    @OneToMany
-    private List<Сomment> commentList;
+//    @OneToMany
+//    private List<Tag> tagList;
+//
+//    @OneToMany
+//    private List<Сomment> commentList;
+
+    @OneToOne(fetch = FetchType.EAGER)
+    private User user;
 }
