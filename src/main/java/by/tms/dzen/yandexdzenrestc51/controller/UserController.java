@@ -1,6 +1,6 @@
 package by.tms.dzen.yandexdzenrestc51.controller;
 
-import by.tms.dzen.yandexdzenrestc51.Entity.User;
+import by.tms.dzen.yandexdzenrestc51.entity.User;
 import by.tms.dzen.yandexdzenrestc51.exception.InvalidException;
 import by.tms.dzen.yandexdzenrestc51.exception.UserNotFoundException;
 import by.tms.dzen.yandexdzenrestc51.repository.UserRepository;

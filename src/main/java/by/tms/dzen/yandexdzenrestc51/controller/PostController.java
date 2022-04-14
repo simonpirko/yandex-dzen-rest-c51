@@ -1,7 +1,9 @@
 package by.tms.dzen.yandexdzenrestc51.controller;
 
-import by.tms.dzen.yandexdzenrestc51.Entity.Post;
-import by.tms.dzen.yandexdzenrestc51.Entity.User;
+import by.tms.dzen.yandexdzenrestc51.converter.PostConverter;
+import by.tms.dzen.yandexdzenrestc51.dto.PostDto;
+import by.tms.dzen.yandexdzenrestc51.entity.Post;
+import by.tms.dzen.yandexdzenrestc51.entity.User;
 import by.tms.dzen.yandexdzenrestc51.exception.InvalidException;
 import by.tms.dzen.yandexdzenrestc51.exception.UserNotFoundException;
 import by.tms.dzen.yandexdzenrestc51.repository.PostRepository;
@@ -24,13 +26,18 @@ public class PostController {
     @Autowired
     private UserRepository userRepository;
 
-    @PostMapping
-    public ResponseEntity<Post> save(@Valid @RequestBody Post post, BindingResult bindingResult){
-        if (bindingResult.hasErrors()){
+    @Autowired
+    private PostConverter postConverter;
+
+    @PostMapping("/{userId}")
+    public ResponseEntity<Post> save(@PathVariable("userId") Long userId,
+                                     @Valid @RequestBody PostDto postDto, BindingResult bindingResult){
+        if (bindingResult.hasErrors() | userId < 1 | userRepository.findById(userId).isEmpty()){
             throw new InvalidException();
         }
-        Post save = postRepository.save(post);
-        return ResponseEntity.ok(save);
+        postDto.setUser(userRepository.findById(userId).get());
+        Post post = postConverter.postDtoToPost(postDto);
+        return ResponseEntity.ok(post);
     }
 
     @GetMapping("/{id}")

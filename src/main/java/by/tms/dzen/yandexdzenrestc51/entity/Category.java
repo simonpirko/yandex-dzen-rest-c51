@@ -1,4 +1,4 @@
-package by.tms.dzen.yandexdzenrestc51.Entity;
+package by.tms.dzen.yandexdzenrestc51.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

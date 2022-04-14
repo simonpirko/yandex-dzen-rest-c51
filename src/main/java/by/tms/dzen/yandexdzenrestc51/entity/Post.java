@@ -1,18 +1,18 @@
-package by.tms.dzen.yandexdzenrestc51.Entity;
+package by.tms.dzen.yandexdzenrestc51.entity;
 
 
 import by.tms.dzen.yandexdzenrestc51.enums.PostType;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.engine.internal.Cascade;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Data
+@Builder
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
@@ -33,6 +33,9 @@ public class Post {
     private long countDizlike;
     @NotNull
     private PostType postType;
+
+    private String content;
+
 
 //    @OneToMany
 //    private List<Tag> tagList;
