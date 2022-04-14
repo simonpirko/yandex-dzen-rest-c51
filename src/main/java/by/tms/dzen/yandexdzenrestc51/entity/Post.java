@@ -2,6 +2,7 @@ package by.tms.dzen.yandexdzenrestc51.entity;
 
 
 import by.tms.dzen.yandexdzenrestc51.enums.PostType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,8 +13,8 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Data
-@Builder
 @Entity
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "POSTS")
@@ -34,7 +35,8 @@ public class Post {
     @NotNull
     private PostType postType;
 
-    private String content;
+    @NotNull
+    private String contents;
 
 
 //    @OneToMany
@@ -43,6 +45,7 @@ public class Post {
 //    @OneToMany
 //    private List<Сomment> commentList;
 
+    @JsonIgnore
     @OneToOne(fetch = FetchType.EAGER)
     private User user;
 }

@@ -16,7 +16,7 @@ public class PostConverter {
                 .countLike(0)
                 .countDizlike(0)
                 .postType(postDto.getPostType())
-                .content(postDto.getContent())
+                .contents(postDto.getContents())
                 .user(postDto.getUser())
                 .build();
     }
