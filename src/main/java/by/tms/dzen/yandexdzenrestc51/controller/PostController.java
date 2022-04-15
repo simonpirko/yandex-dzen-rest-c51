@@ -6,6 +6,10 @@ import by.tms.dzen.yandexdzenrestc51.entity.Post;
 import by.tms.dzen.yandexdzenrestc51.exception.UserNotFoundException;
 import by.tms.dzen.yandexdzenrestc51.repository.PostRepository;
 import by.tms.dzen.yandexdzenrestc51.repository.UserRepository;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -15,6 +19,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
+@Api(tags = "Post", description = "Access to posts")
 @RequestMapping("/post")
 public class PostController {
     @Autowired
@@ -26,8 +31,13 @@ public class PostController {
     @Autowired
     private PostConverter postConverter;
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Post> getPost(@PathVariable("id") Long id) {
+    @ApiResponse(responseCode = "200", description = "successful operation")
+    @ApiResponse(responseCode = "404", description = "post not found")
+    @ApiOperation(value = "Getting a post by user id")
+    @GetMapping(value = "/{id}", produces = "application/json")
+    public ResponseEntity<Post> getPost(@ApiParam(value = "An id is needed as a result of which a post under the given" +
+            " id will be received. for test data use any number instead of id", example = "id")
+            @PathVariable("id") Long id) {
         if (id < 1 | postRepository.findById(id).isEmpty()) {
             throw new UserNotFoundException();
         }
@@ -35,8 +45,12 @@ public class PostController {
         return ResponseEntity.ok(getPost);
     }
 
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<List<Post>> getAllPostByUserId(@PathVariable("userId") Long userId) {
+    @ApiResponse(responseCode = "200", description = "successful operation")
+    @ApiResponse(responseCode = "404", description = "user not found")
+    @ApiOperation(value = "Getting posts by user id")
+    @GetMapping(value = "/user/{userId}", produces = "application/json")
+    public ResponseEntity<List<Post>> getAllPostByUserId(@ApiParam(value = "User ID is required to get all posts " +
+            "of this user", example = "userId") @PathVariable("userId") Long userId) {
         if (userId < 1 | userRepository.findById(userId).isEmpty()) {
             throw new UserNotFoundException();
         }
@@ -44,27 +58,12 @@ public class PostController {
         return ResponseEntity.ok(postLis);
     }
 
-    @DeleteMapping("/{id}")
-    public void delete(@PathVariable("id") Long id) {
-        if (id < 1 | postRepository.findById(id).isEmpty()) {
-            throw new UserNotFoundException();
-        }
-        Post post = postRepository.findById(id).get();
-        postRepository.delete(post);
-    }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Post> update(@PathVariable("id") Long id, Post post) {
-        if (id < 1 | postRepository.findById(id).isEmpty()) {
-            throw new UserNotFoundException();
-        }
-        post.setId(id);
-        Post save = postRepository.save(post);
-        return ResponseEntity.ok(save);
-    }
-
-    @PostMapping("/{userId}")
-    public ResponseEntity<Post> create(@PathVariable("userId") Long userId, @Valid @RequestBody PostDto postDto, BindingResult bindingResult) {
+    @ApiResponse(responseCode = "200", description = "successful operation")
+    @ApiResponse(responseCode = "405", description = "Invalid input")
+    @ApiOperation(value = "Create post", notes = "This can only be done by the logged in user")
+    @PostMapping(value = "/{userId}", produces = "application/json")
+    public ResponseEntity<Post> createPost(@ApiParam(value = "Created post object for user", name = "body")@PathVariable("userId") Long userId, @Valid @RequestBody PostDto postDto, BindingResult bindingResult) {
         if (userId < 1 | bindingResult.hasErrors() | userRepository.findById(userId).isEmpty()) {
             throw new UserNotFoundException();
         }
@@ -74,4 +73,31 @@ public class PostController {
         return ResponseEntity.ok(save);
     }
 
+    @ApiResponse(responseCode = "200", description = "successful operation")
+    @ApiResponse(responseCode = "404", description = "post not found")
+    @ApiOperation(value = "Delete post", notes = "This can only be done by the logged in user")
+    @DeleteMapping(value = "/{id}", produces = "application/json")
+    public void deletePost(@ApiParam(value = "An id is needed as a result of which the post under the given id will " +
+            "be deleted. for test data use any number instead of id", example = "id") @PathVariable("id") Long id) {
+        if (id < 1 | postRepository.findById(id).isEmpty()) {
+            throw new UserNotFoundException();
+        }
+        Post post = postRepository.findById(id).get();
+        postRepository.delete(post);
+    }
+
+    @ApiResponse(responseCode = "200", description = "successful operation")
+    @ApiResponse(responseCode = "404", description = "Post not found")
+    @ApiResponse(responseCode = "405", description = "Invalid input")
+    @ApiOperation(value = "Updated post", notes = "This can only be done by the logged in user")
+    @PutMapping(value = "/{id}", produces = "application/json")
+    public ResponseEntity<Post> updatePost(@ApiParam(value = "Post id is required to change", example = "id")
+                                               @PathVariable("id") Long id, Post post) {
+        if (id < 1 | postRepository.findById(id).isEmpty()) {
+            throw new UserNotFoundException();
+        }
+        post.setId(id);
+        Post save = postRepository.save(post);
+        return ResponseEntity.ok(save);
+    }
 }
