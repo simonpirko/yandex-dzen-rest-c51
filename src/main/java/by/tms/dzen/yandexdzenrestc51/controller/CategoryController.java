@@ -1,6 +1,6 @@
 package by.tms.dzen.yandexdzenrestc51.controller;
 
-import by.tms.dzen.yandexdzenrestc51.Entity.Category;
+import by.tms.dzen.yandexdzenrestc51.entity.Category;
 import by.tms.dzen.yandexdzenrestc51.exception.InvalidException;
 import by.tms.dzen.yandexdzenrestc51.repository.CategoryRepository;
 import io.swagger.annotations.Api;
