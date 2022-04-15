@@ -1,9 +1,9 @@
 package by.tms.dzen.yandexdzenrestc51.controller;
 
-import by.tms.dzen.yandexdzenrestc51.converter.PostConverter;
-import by.tms.dzen.yandexdzenrestc51.dto.PostDto;
+import by.tms.dzen.yandexdzenrestc51.dto.PostDTO;
 import by.tms.dzen.yandexdzenrestc51.entity.Post;
 import by.tms.dzen.yandexdzenrestc51.exception.NotFoundException;
+import by.tms.dzen.yandexdzenrestc51.mapper.PostMapper;
 import by.tms.dzen.yandexdzenrestc51.repository.PostRepository;
 import by.tms.dzen.yandexdzenrestc51.repository.UserRepository;
 import io.swagger.annotations.Api;
@@ -15,6 +15,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -23,12 +24,12 @@ import java.util.List;
 public class PostController {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
-    private final PostConverter postConverter;
+    private final PostMapper postMapper;
 
-    public PostController(PostRepository postRepository, UserRepository userRepository, PostConverter postConverter) {
+    public PostController(PostRepository postRepository, UserRepository userRepository, PostMapper postMapper) {
         this.postRepository = postRepository;
         this.userRepository = userRepository;
-        this.postConverter = postConverter;
+        this.postMapper = postMapper;
     }
 
     @ApiResponse(responseCode = "200", description = "successful operation")
@@ -71,13 +72,15 @@ public class PostController {
     @PostMapping(value = "/{userId}", produces = "application/json")
     public ResponseEntity<Post> createPost(@ApiParam(value = "Created post object for user", name = "body")
                                            @PathVariable("userId") Long userId,
-                                           @Valid @RequestBody PostDto postDto, BindingResult bindingResult) {
+                                           @Valid @RequestBody PostDTO postDto, BindingResult bindingResult) {
 
         if (userId < 1 | bindingResult.hasErrors() | userRepository.findById(userId).isEmpty()) {
             throw new NotFoundException();
         }
-        Post post = postConverter.postDtoToPost(postDto);
+
+        Post post = postMapper.postDTOToPost(postDto);
         post.setUser(userRepository.findById(userId).get());
+        post.setCreateDate(LocalDateTime.now());
         Post save = postRepository.save(post);
 
         return ResponseEntity.ok(save);

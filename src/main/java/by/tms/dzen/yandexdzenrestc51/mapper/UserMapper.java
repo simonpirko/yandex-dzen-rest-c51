@@ -1,11 +1,11 @@
 package by.tms.dzen.yandexdzenrestc51.mapper;
 
-import by.tms.dzen.yandexdzenrestc51.dto.UserDto;
+import by.tms.dzen.yandexdzenrestc51.dto.UserDTO;
 import by.tms.dzen.yandexdzenrestc51.entity.User;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {
-    UserDto userToUserDto(User user);
-    User userDtoToUser(UserDto userDto);
+    UserDTO userToUserDto(User user);
+    User userDtoToUser(UserDTO userDto);
 }
