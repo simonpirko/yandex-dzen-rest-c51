@@ -1,7 +1,9 @@
 package by.tms.dzen.yandexdzenrestc51.controller;
 
 import by.tms.dzen.yandexdzenrestc51.entity.Category;
+import by.tms.dzen.yandexdzenrestc51.exception.ExistsException;
 import by.tms.dzen.yandexdzenrestc51.exception.InvalidException;
+import by.tms.dzen.yandexdzenrestc51.exception.NotFoundException;
 import by.tms.dzen.yandexdzenrestc51.repository.CategoryRepository;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -19,7 +21,6 @@ import java.util.List;
 @Api(tags = "Category", description = "Operations with category")
 @RequestMapping("/api/v1/category")
 public class CategoryController {
-
     private final CategoryRepository categoryRepository;
 
     public CategoryController(CategoryRepository categoryRepository) {
@@ -33,9 +34,15 @@ public class CategoryController {
     @ApiOperation(value = "Create category", notes = "This can only be done by the logged in user")
     @PostMapping(produces = "application/json")
     public ResponseEntity<Category> save(@Valid @RequestBody
-                                         @ApiParam(value = "Create category object") Category category, BindingResult bindingResult) {
-        if (bindingResult.hasErrors() | categoryRepository.findByName(category.getName()).isPresent()) {
+                                         @ApiParam(value = "Create category object") Category category,
+                                         BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
             throw new InvalidException();
+        }
+
+        if (categoryRepository.findByName(category.getName()).isPresent()) {
+            throw new ExistsException();
         }
 
         return ResponseEntity.ok(categoryRepository.save(category));
@@ -57,8 +64,12 @@ public class CategoryController {
     @ApiOperation(value = "Get category by ID", notes = "This can only be done by the logged in user")
     @GetMapping(value = "/{id}", produces = "application/json")
     public ResponseEntity<Category> getById(@PathVariable("id") Long id) {
-        if (id < 1 | categoryRepository.findById(id).isEmpty()) {
+        if (id < 1) {
             throw new InvalidException();
+        }
+
+        if (categoryRepository.findById(id).isEmpty()){
+            throw new NotFoundException();
         }
 
         Category category = categoryRepository.findById(id).get();
@@ -72,8 +83,12 @@ public class CategoryController {
     @ApiOperation(value = "Delete category by ID", notes = "This can only be done by the logged in user")
     @DeleteMapping(value = "/{id}", produces = "application/json")
     public void delete(@PathVariable("id") Long id) {
-        if (id < 1 | categoryRepository.findById(id).isEmpty()) {
+        if (id < 1) {
             throw new InvalidException();
+        }
+
+        if (categoryRepository.findById(id).isEmpty()){
+            throw new NotFoundException();
         }
 
         categoryRepository.deleteById(id);
@@ -86,9 +101,15 @@ public class CategoryController {
     @ApiOperation(value = "Update category by ID", notes = "This can only be done by the logged in user")
     @PutMapping(value = "/{id}", produces = "application/json")
     public ResponseEntity<Category> update(@PathVariable("id") Long id,
-                                           @Valid @RequestBody Category category, BindingResult bindingResult) {
-        if (bindingResult.hasErrors() | categoryRepository.findById(id).isEmpty()) {
+                                           @Valid @RequestBody Category category,
+                                           BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()  ) {
             throw new InvalidException();
+        }
+
+        if (categoryRepository.findById(id).isEmpty()) {
+            throw new NotFoundException();
         }
 
         category.setId(id);

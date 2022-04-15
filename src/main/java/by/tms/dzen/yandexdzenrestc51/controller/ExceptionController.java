@@ -1,5 +1,6 @@
 package by.tms.dzen.yandexdzenrestc51.controller;
 
+import by.tms.dzen.yandexdzenrestc51.exception.ExistsException;
 import by.tms.dzen.yandexdzenrestc51.exception.InvalidException;
 import by.tms.dzen.yandexdzenrestc51.exception.NotFoundException;
 import org.springframework.core.env.Environment;
@@ -19,12 +20,17 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(InvalidException.class)
-    public ResponseEntity<Object> invalidInputException(InvalidException ex){
+    public ResponseEntity<Object> invalidInputException(InvalidException ex) {
         return new ResponseEntity(environment.getProperty("IvalidInput"), HttpStatus.METHOD_NOT_ALLOWED);
     }
 
     @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<Object> userNotFoundException(NotFoundException ex){
-        return new ResponseEntity(environment.getProperty("NotFound"),HttpStatus.BAD_REQUEST);
+    public ResponseEntity<Object> userNotFoundException(NotFoundException ex) {
+        return new ResponseEntity(environment.getProperty("NotFound"), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ExistsException.class)
+    public ResponseEntity<Object> userExistsException(ExistsException ex) {
+        return new ResponseEntity(environment.getProperty("Exists"), HttpStatus.BAD_REQUEST);
     }
 }
