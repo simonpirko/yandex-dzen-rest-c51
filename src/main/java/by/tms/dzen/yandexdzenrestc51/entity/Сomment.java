@@ -8,10 +8,11 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Data
-//@Entity
+@Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class Сomments {
+@Table(name = "COMMENTS")
+public class Сomment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,6 +20,4 @@ public class Сomments {
     private LocalDateTime createDate;
     private long countLike;
     private long countDizlike;
-
-
 }

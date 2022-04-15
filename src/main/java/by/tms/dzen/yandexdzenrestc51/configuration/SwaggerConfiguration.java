@@ -27,7 +27,7 @@ public class SwaggerConfiguration {
     private ApiInfo apiInfo() {
         return new ApiInfo(
                 "Yandex Dzen API",
-                "Yandex Dzen API by TMS-c51 ",
+                "Yandex Dzen API by TMS-C51 ",
                 "1.0.0 ",
                 "http://localhost:8080",
                 new Contact("Contact the developer", "http://localhost:8080", "admin@localhost.by"),

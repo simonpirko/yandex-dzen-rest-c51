@@ -1,9 +1,8 @@
 package by.tms.dzen.yandexdzenrestc51.controller;
 
+import by.tms.dzen.yandexdzenrestc51.exception.ExistsException;
 import by.tms.dzen.yandexdzenrestc51.exception.InvalidException;
-import by.tms.dzen.yandexdzenrestc51.exception.UserNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import by.tms.dzen.yandexdzenrestc51.exception.NotFoundException;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,16 +13,24 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @RestControllerAdvice
 public class ExceptionController extends ResponseEntityExceptionHandler {
 
-    @Autowired
-    private Environment environment;
+    private final Environment environment;
+
+    public ExceptionController(Environment environment) {
+        this.environment = environment;
+    }
 
     @ExceptionHandler(InvalidException.class)
-    public ResponseEntity<Object> invalidInputException(InvalidException ex){
+    public ResponseEntity<Object> invalidInputException(InvalidException ex) {
         return new ResponseEntity(environment.getProperty("IvalidInput"), HttpStatus.METHOD_NOT_ALLOWED);
     }
 
-    @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<Object> userNotFoundException(UserNotFoundException ex){
-        return new ResponseEntity(environment.getProperty("UserNotFound"),HttpStatus.BAD_REQUEST);
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<Object> userNotFoundException(NotFoundException ex) {
+        return new ResponseEntity(environment.getProperty("NotFound"), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ExistsException.class)
+    public ResponseEntity<Object> userExistsException(ExistsException ex) {
+        return new ResponseEntity(environment.getProperty("Exists"), HttpStatus.BAD_REQUEST);
     }
 }
