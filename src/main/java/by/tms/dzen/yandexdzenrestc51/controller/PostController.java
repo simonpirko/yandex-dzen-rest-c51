@@ -2,6 +2,7 @@ package by.tms.dzen.yandexdzenrestc51.controller;
 
 import by.tms.dzen.yandexdzenrestc51.dto.PostDTO;
 import by.tms.dzen.yandexdzenrestc51.entity.Post;
+import by.tms.dzen.yandexdzenrestc51.exception.InvalidException;
 import by.tms.dzen.yandexdzenrestc51.exception.NotFoundException;
 import by.tms.dzen.yandexdzenrestc51.mapper.PostMapper;
 import by.tms.dzen.yandexdzenrestc51.repository.PostRepository;
@@ -32,15 +33,19 @@ public class PostController {
         this.postMapper = postMapper;
     }
 
-    @ApiResponse(responseCode = "200", description = "successful operation")
-    @ApiResponse(responseCode = "404", description = "post not found")
+    @ApiResponse(responseCode = "200", description = "Successful operation")
+    @ApiResponse(responseCode = "404", description = "Post not found")
     @ApiOperation(value = "Getting a post by user id")
     @GetMapping(value = "/{id}", produces = "application/json")
     public ResponseEntity<Post> getPost(@ApiParam(value = "An id is needed as a result of which a post under the given" +
             " id will be received. for test data use any number instead of id", example = "id")
                                         @PathVariable("id") Long id) {
 
-        if (id < 1 | postRepository.findById(id).isEmpty()) {
+        if (id < 1) {
+            throw new InvalidException();
+        }
+
+        if (postRepository.findById(id).isEmpty()){
             throw new NotFoundException();
         }
         Post getPost = postRepository.findById(id).get();
@@ -48,25 +53,28 @@ public class PostController {
         return ResponseEntity.ok(getPost);
     }
 
-    @ApiResponse(responseCode = "200", description = "successful operation")
-    @ApiResponse(responseCode = "404", description = "user not found")
+    @ApiResponse(responseCode = "200", description = "Successful operation")
+    @ApiResponse(responseCode = "404", description = "User not found")
     @ApiOperation(value = "Getting posts by user id")
     @GetMapping(value = "/user/{userId}", produces = "application/json")
     public ResponseEntity<List<Post>> getAllPostByUserId(@ApiParam(value = "User ID is required to get all posts " +
             "of this user", example = "userId")
                                                          @PathVariable("userId") Long userId) {
 
-        if (userId < 1 | userRepository.findById(userId).isEmpty()) {
-            throw new NotFoundException();
+        if (userId < 1 ) {
+            throw new InvalidException();
         }
 
+        if (userRepository.findById(userId).isEmpty()) {
+            throw new NotFoundException();
+        }
         List<Post> postLis = postRepository.findAllByUserId(userId).get();
 
         return ResponseEntity.ok(postLis);
     }
 
 
-    @ApiResponse(responseCode = "200", description = "successful operation")
+    @ApiResponse(responseCode = "200", description = "Successful operation")
     @ApiResponse(responseCode = "405", description = "Invalid input")
     @ApiOperation(value = "Create post", notes = "This can only be done by the logged in user")
     @PostMapping(value = "/{userId}", produces = "application/json")
@@ -74,7 +82,11 @@ public class PostController {
                                            @PathVariable("userId") Long userId,
                                            @Valid @RequestBody PostDTO postDto, BindingResult bindingResult) {
 
-        if (userId < 1 | bindingResult.hasErrors() | userRepository.findById(userId).isEmpty()) {
+        if (userId < 1 | bindingResult.hasErrors()) {
+            throw new InvalidException();
+        }
+
+        if (userRepository.findById(userId).isEmpty()) {
             throw new NotFoundException();
         }
 
@@ -86,22 +98,26 @@ public class PostController {
         return ResponseEntity.ok(save);
     }
 
-    @ApiResponse(responseCode = "200", description = "successful operation")
-    @ApiResponse(responseCode = "404", description = "post not found")
+    @ApiResponse(responseCode = "200", description = "Successful operation")
+    @ApiResponse(responseCode = "404", description = "Post not found")
     @ApiOperation(value = "Delete post", notes = "This can only be done by the logged in user")
     @DeleteMapping(value = "/{id}", produces = "application/json")
     public void deletePost(@ApiParam(value = "An id is needed as a result of which the post under the given id will " +
             "be deleted. for test data use any number instead of id", example = "id")
                            @PathVariable("id") Long id) {
 
-        if (id < 1 | postRepository.findById(id).isEmpty()) {
+        if (id < 1) {
+            throw new InvalidException();
+        }
+
+        if(postRepository.findById(id).isEmpty()) {
             throw new NotFoundException();
         }
         Post post = postRepository.findById(id).get();
         postRepository.delete(post);
     }
 
-    @ApiResponse(responseCode = "200", description = "successful operation")
+    @ApiResponse(responseCode = "200", description = "Successful operation")
     @ApiResponse(responseCode = "404", description = "Post not found")
     @ApiResponse(responseCode = "405", description = "Invalid input")
     @ApiOperation(value = "Updated post", notes = "This can only be done by the logged in user")
@@ -109,7 +125,11 @@ public class PostController {
     public ResponseEntity<Post> updatePost(@ApiParam(value = "Post id is required to change", example = "id")
                                            @PathVariable("id") Long id, Post post) {
 
-        if (id < 1 | postRepository.findById(id).isEmpty()) {
+        if (id < 1) {
+            throw new InvalidException();
+        }
+
+        if (postRepository.findById(id).isEmpty()) {
             throw new NotFoundException();
         }
         post.setId(id);

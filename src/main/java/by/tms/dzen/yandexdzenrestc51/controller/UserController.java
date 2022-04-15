@@ -25,12 +25,12 @@ public class UserController {
         this.userRepository = userRepository;
     }
 
-    @ApiResponse(responseCode = "200", description = "successful operation")
+    @ApiResponse(responseCode = "200", description = "Successful operation")
     @ApiResponse(responseCode = "404", description = "User not found")
     @ApiOperation(value = "Get user by user name")
     @GetMapping(value = "/{username}", produces = "application/json")
-    public ResponseEntity<User> getUser(@ApiParam(value = "The name that needs to be fetched. Use user1 for testing.", example = "username")
-                                        @PathVariable("username") String username) {
+    public ResponseEntity<User> get(@ApiParam(value = "The name that needs to be fetched. Use user1 for testing", example = "username")
+                                    @PathVariable("username") String username) {
 
         if (username == null | userRepository.findByUsername(username).isEmpty()) {
             throw new NotFoundException();
@@ -40,7 +40,7 @@ public class UserController {
         return ResponseEntity.ok(getUser);
     }
 
-    @ApiResponse(responseCode = "200", description = "successful operation")
+    @ApiResponse(responseCode = "200", description = "Successful operation")
     @ApiResponse(responseCode = "405", description = "Invalid input")
     @ApiOperation(value = "Create user", notes = "This can only be done by the logged in user")
     @PostMapping(produces = "application/json")
@@ -55,7 +55,7 @@ public class UserController {
         return ResponseEntity.ok(save);
     }
 
-    @ApiResponse(responseCode = "200", description = "successful operation")
+    @ApiResponse(responseCode = "200", description = "Successful operation")
     @ApiResponse(responseCode = "404", description = "User not found")
     @ApiResponse(responseCode = "405", description = "Invalid input")
     @ApiOperation(value = "Updated user", notes = "This can only be done by the logged in user")
@@ -79,12 +79,12 @@ public class UserController {
         return ResponseEntity.ok(update);
     }
 
-    @ApiResponse(responseCode = "200", description = "successful operation")
+    @ApiResponse(responseCode = "200", description = "Successful operation")
     @ApiResponse(responseCode = "404", description = "User not found")
     @ApiOperation(value = "Delete user", notes = "This can only be done by the logged in user.")
     @DeleteMapping(value = "/{username}", produces = "application/json")
     public void deleteUser(@ApiParam(value = "username that need to be deleted", example = "username")
-                               @PathVariable("username") String username) {
+                           @PathVariable("username") String username) {
 
         if (username == null | userRepository.findByUsername(username).isEmpty()) {
             throw new NotFoundException();

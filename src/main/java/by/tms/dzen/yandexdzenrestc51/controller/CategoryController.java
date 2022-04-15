@@ -71,8 +71,8 @@ public class CategoryController {
         if (categoryRepository.findById(id).isEmpty()){
             throw new NotFoundException();
         }
-
         Category category = categoryRepository.findById(id).get();
+
         return ResponseEntity.ok(category);
     }
 
@@ -90,7 +90,6 @@ public class CategoryController {
         if (categoryRepository.findById(id).isEmpty()){
             throw new NotFoundException();
         }
-
         categoryRepository.deleteById(id);
     }
 
@@ -111,8 +110,8 @@ public class CategoryController {
         if (categoryRepository.findById(id).isEmpty()) {
             throw new NotFoundException();
         }
-
         category.setId(id);
+
         return ResponseEntity.ok(categoryRepository.save(category));
     }
 }
