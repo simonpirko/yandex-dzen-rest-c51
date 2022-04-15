@@ -17,7 +17,7 @@ import java.util.List;
 
 @RestController
 @Api(tags = "Category", description = "Operations with category")
-@RequestMapping("/category")
+@RequestMapping("/api/v1/category")
 public class CategoryController {
 
     private final CategoryRepository categoryRepository;
@@ -85,7 +85,8 @@ public class CategoryController {
     })
     @ApiOperation(value = "Update category by ID", notes = "This can only be done by the logged in user")
     @PutMapping(value = "/{id}", produces = "application/json")
-    public ResponseEntity<Category> update(@PathVariable("id") Long id, @Valid @RequestBody Category category, BindingResult bindingResult) {
+    public ResponseEntity<Category> update(@PathVariable("id") Long id,
+                                           @Valid @RequestBody Category category, BindingResult bindingResult) {
         if (bindingResult.hasErrors() | categoryRepository.findById(id).isEmpty()) {
             throw new InvalidException();
         }
