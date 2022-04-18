@@ -33,7 +33,7 @@ public class DisLikeController {
         if (likeValidator.existsByUserIdAndPostId(userId, postId)) {
             likeDisLikeService.removeDisLike(userId, postId);
         } else {
-            throw new NotFoundException("Like not found");
+            throw new NotFoundException();
         }
     }
 }

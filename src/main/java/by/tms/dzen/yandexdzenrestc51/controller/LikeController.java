@@ -32,6 +32,7 @@ public class LikeController {
     @PostMapping(value = "/{userId}/{postId}", produces = "application/json")
     public ResponseEntity<Like> save(@PathVariable("userId") @ApiParam(value = "The user who added the like", example = "userId") Long userId,
                                      @PathVariable("postId") @ApiParam(value = "Add like for the post", example = "postId") Long postId) {
+
         likeValidator.validateID(userId, postId);
         likeValidator.existsByUserIdAndPostId(userId, postId);
 
@@ -45,7 +46,7 @@ public class LikeController {
         if (likeValidator.existsByUserIdAndPostId(userId, postId)) {
             likeDisLikeService.removeLike(userId, postId);
         } else {
-            throw new NotFoundException("Like not found");
+            throw new NotFoundException();
         }
     }
 }

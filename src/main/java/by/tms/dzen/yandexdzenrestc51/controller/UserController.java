@@ -34,7 +34,7 @@ public class UserController {
                                     @PathVariable("username") String username) {
 
         if (username == null | userRepository.findByUsername(username).isEmpty()) {
-            throw new NotFoundException("User not found");
+            throw new NotFoundException();
         }
         User getUser = userRepository.findByUsername(username).get();
 
@@ -43,17 +43,18 @@ public class UserController {
 
     @ApiResponse(responseCode = "200", description = "Successful operation")
     @ApiResponse(responseCode = "405", description = "Invalid input")
+    @ApiResponse(responseCode = "409", description = "User already exists")
     @ApiOperation(value = "Create user", notes = "This can only be done by the logged in user")
     @PostMapping(produces = "application/json")
     public ResponseEntity<User> save(@ApiParam(value = "Created user object", name = "body")
                                      @Valid @RequestBody User user, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
-            throw new InvalidException("Invalid input");
+            throw new InvalidException();
         }
 
         if (userRepository.findByUsername(user.getUsername()).isPresent()) {
-            throw new ExistsException("User already exists");
+            throw new ExistsException();
         }
 
         User save = userRepository.save(user);
@@ -93,7 +94,7 @@ public class UserController {
                            @PathVariable("username") String username) {
 
         if (username == null | userRepository.findByUsername(username).isEmpty()) {
-            throw new NotFoundException("User not found");
+            throw new NotFoundException();
         }
         User user = userRepository.findByUsername(username).get();
         userRepository.delete(user);

@@ -6,6 +6,7 @@ import by.tms.dzen.yandexdzenrestc51.exception.ExistsException;
 import by.tms.dzen.yandexdzenrestc51.repository.DisLikeRepository;
 import by.tms.dzen.yandexdzenrestc51.repository.LikeRepository;
 import by.tms.dzen.yandexdzenrestc51.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -22,7 +23,7 @@ public class LikeDisLikeService {
 
     public Like addLike(long userId, long postId) {
         if (likeRepository.findByUserIdAndPostId(userId, postId).isPresent()) {
-            throw new ExistsException("Like already exists");
+            throw new ExistsException();
         }
 
         if (disLikeRepository.findByUserIdAndPostId(userId, postId).isPresent()) {
@@ -38,7 +39,7 @@ public class LikeDisLikeService {
 
     public DisLike addDisLike(long userId, long postId) {
         if (disLikeRepository.findByUserIdAndPostId(userId, postId).isPresent()) {
-            throw new ExistsException("DisLike already exists");
+            throw new ExistsException();
         }
 
         if (likeRepository.findByUserIdAndPostId(userId, postId).isPresent()) {

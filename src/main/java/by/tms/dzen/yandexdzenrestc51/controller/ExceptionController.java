@@ -36,6 +36,6 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(ExistsException.class)
     public ResponseEntity<Object> userExistsException(ExistsException ex) {
-        return new ResponseEntity(msgExists, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity(msgExists, HttpStatus.CONFLICT);
     }
 }
