@@ -26,7 +26,7 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<Object> userNotFoundException(NotFoundException ex) {
-        return new ResponseEntity(environment.getProperty("NotFound"), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity(environment.getProperty("NotFound"), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(ExistsException.class)
