@@ -25,8 +25,9 @@ public class LikeController {
     }
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successful operation"),
-            @ApiResponse(responseCode = "404", description = "Like not found"),
-            @ApiResponse(responseCode = "405", description = "Invalid input")
+            @ApiResponse(responseCode = "404", description = "Not found"),
+            @ApiResponse(responseCode = "405", description = "Invalid input"),
+            @ApiResponse(responseCode = "409", description = "Already exists")
     })
     @ApiOperation(value = "Add like", notes = "This can only be done by the logged in user")
     @PostMapping(value = "/{userId}/{postId}", produces = "application/json")
@@ -39,8 +40,15 @@ public class LikeController {
         return ResponseEntity.ok(likeDisLikeService.addLike(userId, postId));
     }
 
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful operation"),
+            @ApiResponse(responseCode = "404", description = "Not found"),
+            @ApiResponse(responseCode = "405", description = "Invalid input")
+    })
+    @ApiOperation(value = "Delete like", notes = "This can only be done by the logged in user")
     @DeleteMapping("/{userId}/{postId}")
-    public void delete(@PathVariable("userId") Long userId, @PathVariable("postId") Long postId) {
+    public void delete(@PathVariable("userId") @ApiParam(value = "The user who deleted the like", example = "userId") Long userId,
+                       @PathVariable("postId") @ApiParam(value = "Remove the like from the post", example = "postId") Long postId) {
         likeValidator.validateID(userId, postId);
 
         if (likeValidator.existsByUserIdAndPostId(userId, postId)) {
