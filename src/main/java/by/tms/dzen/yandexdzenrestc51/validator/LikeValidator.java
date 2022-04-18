@@ -19,15 +19,11 @@ public class LikeValidator {
     public void validateID (long userId, long postId) {
         if(userId < 1 | postId < 1) {
             throw new InvalidException("Invalid userId or postId");
-        }
-
-        if (userRepository.findById(userId).isEmpty() | postRepository.findById(postId).isEmpty()) {
-            throw new NotFoundException("User or post not found");
-        }
+       }
     }
 
     public boolean existsByUserIdAndPostId(long userId, long postId) {
-        if (userRepository.findById(userId).isEmpty() | postRepository.findById(postId).isEmpty()) {
+        if (userRepository.findById(userId).isEmpty() || postRepository.findById(postId).isEmpty()) {
             throw new NotFoundException("User or post not found");
         }
         return true;
