@@ -29,7 +29,7 @@ public class LikeController {
             @ApiResponse(responseCode = "405", description = "Invalid input"),
             @ApiResponse(responseCode = "409", description = "Already exists")
     })
-    @ApiOperation(value = "Add like", notes = "This can only be done by the logged in user")
+    @ApiOperation(value = "Add Like", notes = "This can only be done by the logged in user")
     @PostMapping(value = "/{userId}/{postId}", produces = "application/json")
     public ResponseEntity<Like> save(@PathVariable("userId") @ApiParam(value = "The user who added the like", example = "userId") Long userId,
                                      @PathVariable("postId") @ApiParam(value = "Add like for the post", example = "postId") Long postId) {
@@ -45,7 +45,7 @@ public class LikeController {
             @ApiResponse(responseCode = "404", description = "Not found"),
             @ApiResponse(responseCode = "405", description = "Invalid input")
     })
-    @ApiOperation(value = "Delete like", notes = "This can only be done by the logged in user")
+    @ApiOperation(value = "Delete Like", notes = "This can only be done by the logged in user")
     @DeleteMapping("/{userId}/{postId}")
     public void delete(@PathVariable("userId") @ApiParam(value = "The user who deleted the like", example = "userId") Long userId,
                        @PathVariable("postId") @ApiParam(value = "Remove the like from the post", example = "postId") Long postId) {
