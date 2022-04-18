@@ -24,6 +24,11 @@ public class LikeDisLikeService {
         if (likeRepository.findByUserIdAndPostId(userId, postId).isPresent()) {
             throw new ExistsException("Like already exists");
         }
+
+        if (disLikeRepository.findByUserIdAndPostId(userId, postId).isPresent()) {
+            removeDisLike(userId, postId);
+        }
+
         return likeRepository.save(new Like(0, userRepository.findById(userId).get(), postId));
     }
 
@@ -36,10 +41,14 @@ public class LikeDisLikeService {
             throw new ExistsException("DisLike already exists");
         }
 
+        if (likeRepository.findByUserIdAndPostId(userId, postId).isPresent()) {
+            removeLike(userId, postId);
+        }
+
         return disLikeRepository.save(new DisLike(0, userRepository.findById(userId).get(), postId));
     }
 
-//    public void removeDisLike(long userId, long postId) {
-//        likeRepository.findByUserIdAndPostId(userId, postId).ifPresent(likeRepository::delete);
-//    }
+    public void removeDisLike(long userId, long postId) {
+        disLikeRepository.findByUserIdAndPostId(userId, postId).ifPresent(disLikeRepository::delete);
+    }
 }
