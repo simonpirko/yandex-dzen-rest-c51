@@ -21,16 +21,22 @@ public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
     @NotNull
     private String title;
+
     @NotNull
     private LocalDateTime createDate;
+
     @NotNull
     private long numberOfReads;
+
     @NotNull
     private long countLike;
+
     @NotNull
     private long countDizlike;
+
     @NotNull
     private PostType postType;
 
