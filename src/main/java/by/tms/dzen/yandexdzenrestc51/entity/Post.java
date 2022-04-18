@@ -4,7 +4,6 @@ package by.tms.dzen.yandexdzenrestc51.entity;
 import by.tms.dzen.yandexdzenrestc51.enums.PostType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -14,7 +13,6 @@ import java.time.LocalDateTime;
 
 @Data
 @Entity
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "POSTS")
