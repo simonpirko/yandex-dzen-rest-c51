@@ -1,6 +1,7 @@
 package by.tms.dzen.yandexdzenrestc51.controller;
 
 import by.tms.dzen.yandexdzenrestc51.entity.User;
+import by.tms.dzen.yandexdzenrestc51.exception.ExistsException;
 import by.tms.dzen.yandexdzenrestc51.exception.InvalidException;
 import by.tms.dzen.yandexdzenrestc51.exception.NotFoundException;
 import by.tms.dzen.yandexdzenrestc51.repository.UserRepository;
@@ -33,7 +34,7 @@ public class UserController {
                                     @PathVariable("username") String username) {
 
         if (username == null | userRepository.findByUsername(username).isEmpty()) {
-            throw new NotFoundException();
+            throw new NotFoundException("User not found");
         }
         User getUser = userRepository.findByUsername(username).get();
 
@@ -47,9 +48,14 @@ public class UserController {
     public ResponseEntity<User> save(@ApiParam(value = "Created user object", name = "body")
                                      @Valid @RequestBody User user, BindingResult bindingResult) {
 
-        if (bindingResult.hasErrors() | userRepository.findByUsername(user.getUsername()).isPresent()) {
-            throw new InvalidException();
+        if (bindingResult.hasErrors()) {
+            throw new InvalidException("Invalid input");
         }
+
+        if (userRepository.findByUsername(user.getUsername()).isPresent()) {
+            throw new ExistsException("User already exists");
+        }
+
         User save = userRepository.save(user);
 
         return ResponseEntity.ok(save);
@@ -87,7 +93,7 @@ public class UserController {
                            @PathVariable("username") String username) {
 
         if (username == null | userRepository.findByUsername(username).isEmpty()) {
-            throw new NotFoundException();
+            throw new NotFoundException("User not found");
         }
         User user = userRepository.findByUsername(username).get();
         userRepository.delete(user);
