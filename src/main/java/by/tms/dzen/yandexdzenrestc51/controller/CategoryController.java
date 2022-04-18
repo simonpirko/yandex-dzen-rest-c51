@@ -10,6 +10,8 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -17,10 +19,19 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
+@PropertySource("classpath:messages.properties")
 @RestController
 @Api(tags = "Category", description = "Operations with category")
 @RequestMapping("/api/v1/category")
 public class CategoryController {
+    @Value("${invalidInput}")
+    private String msgInvalidInput;
+
+    @Value("${notFound}")
+    private String msgNotFound;
+
+    @Value("${exists}")
+    private String msgExists;
     private final CategoryRepository categoryRepository;
 
     public CategoryController(CategoryRepository categoryRepository) {
@@ -29,7 +40,8 @@ public class CategoryController {
 
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successful operation"),
-            @ApiResponse(responseCode = "405", description = "Invalid input")
+            @ApiResponse(responseCode = "405", description = "Invalid input"),
+            @ApiResponse(responseCode = "409", description = "Already exists")
     })
     @ApiOperation(value = "Create category", notes = "This can only be done by the logged in user")
     @PostMapping(produces = "application/json")

@@ -1,6 +1,7 @@
 package by.tms.dzen.yandexdzenrestc51.controller;
 
 import by.tms.dzen.yandexdzenrestc51.entity.User;
+import by.tms.dzen.yandexdzenrestc51.exception.ExistsException;
 import by.tms.dzen.yandexdzenrestc51.exception.InvalidException;
 import by.tms.dzen.yandexdzenrestc51.exception.NotFoundException;
 import by.tms.dzen.yandexdzenrestc51.repository.UserRepository;
@@ -42,14 +43,20 @@ public class UserController {
 
     @ApiResponse(responseCode = "200", description = "Successful operation")
     @ApiResponse(responseCode = "405", description = "Invalid input")
+    @ApiResponse(responseCode = "409", description = "User already exists")
     @ApiOperation(value = "Create user", notes = "This can only be done by the logged in user")
     @PostMapping(produces = "application/json")
     public ResponseEntity<User> save(@ApiParam(value = "Created user object", name = "body")
                                      @Valid @RequestBody User user, BindingResult bindingResult) {
 
-        if (bindingResult.hasErrors() | userRepository.findByUsername(user.getUsername()).isPresent()) {
+        if (bindingResult.hasErrors()) {
             throw new InvalidException();
         }
+
+        if (userRepository.findByUsername(user.getUsername()).isPresent()) {
+            throw new ExistsException();
+        }
+
         User save = userRepository.save(user);
 
         return ResponseEntity.ok(save);
