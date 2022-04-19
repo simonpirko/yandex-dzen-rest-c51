@@ -6,7 +6,6 @@ import by.tms.dzen.yandexdzenrestc51.exception.ExistsException;
 import by.tms.dzen.yandexdzenrestc51.repository.DisLikeRepository;
 import by.tms.dzen.yandexdzenrestc51.repository.LikeRepository;
 import by.tms.dzen.yandexdzenrestc51.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
