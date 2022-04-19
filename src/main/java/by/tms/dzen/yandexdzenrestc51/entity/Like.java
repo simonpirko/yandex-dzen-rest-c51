@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 
 @Data
 @NoArgsConstructor
@@ -23,7 +22,7 @@ public class Like {
     @ManyToOne
     private User user;
 
-    @NotNull
-    private long postId;
+    @ManyToOne(cascade = CascadeType.ALL)
+    private Post post;
 }
 

@@ -33,12 +33,6 @@ public class Post {
     private long numberOfReads;
 
     @NotNull
-    private long countLike;
-
-    @NotNull
-    private long countDizlike;
-
-    @NotNull
     private PostType postType;
 
     @NotNull
@@ -47,10 +41,20 @@ public class Post {
     @OneToMany
     private List<Tag> tagList;
 
-//    @OneToMany
-//    private List<Сomment> commentList;
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @JsonIgnore
-    @OneToOne(fetch = FetchType.EAGER)
-    private User user;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "post")
+    private List<Like> likes;
+
+    @JsonIgnore
+    @OneToMany
+    private List<DisLike> dislikes;
+
+    @JsonIgnore
+    @OneToMany
+    private List<Comment> comments;
 }
