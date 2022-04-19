@@ -1,6 +1,7 @@
 package by.tms.dzen.yandexdzenrestc51.entity;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -12,6 +13,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Entity
 public class User {
 
@@ -22,7 +24,6 @@ public class User {
     @Size(min = 3, max = 25)
     private String username;
 
-    @Size(min = 3, max = 25)
     private String password;
 
     @Size(min = 2, max = 25)
@@ -36,6 +37,12 @@ public class User {
 
     @Pattern(regexp = "^(\\+)?(\\(\\d{2,3}\\) ?\\d|\\d)(([ \\-]?\\d)|( ?\\(\\d{2,3}\\) ?)){5,12}\\d$")
     private String phone;
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "user")
+    private List<Role> roleList;
+
+    @Enumerated(EnumType.STRING)
+    private Status status;
 
     @OneToMany
     private List<Like> likes;
