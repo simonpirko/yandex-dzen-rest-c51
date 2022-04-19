@@ -47,8 +47,8 @@ public class Post {
     @OneToMany
     private List<Tag> tagList;
 
-//    @OneToMany
-//    private List<Сomment> commentList;
+    @OneToMany
+    private List<Comment> commentList;
 
     @JsonIgnore
     @OneToOne(fetch = FetchType.EAGER)
