@@ -5,8 +5,9 @@ import by.tms.dzen.yandexdzenrestc51.entity.Like;
 import by.tms.dzen.yandexdzenrestc51.exception.ExistsException;
 import by.tms.dzen.yandexdzenrestc51.repository.DisLikeRepository;
 import by.tms.dzen.yandexdzenrestc51.repository.LikeRepository;
+import by.tms.dzen.yandexdzenrestc51.repository.PostRepository;
 import by.tms.dzen.yandexdzenrestc51.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,6 +15,9 @@ public class LikeDisLikeService {
     private final DisLikeRepository disLikeRepository;
     private final UserRepository userRepository;
     private final LikeRepository likeRepository;
+
+    @Autowired
+    private PostRepository postRepository;
 
     public LikeDisLikeService(UserRepository userRepository, LikeRepository likeRepository, DisLikeRepository disLikeRepository) {
         this.userRepository = userRepository;
@@ -30,7 +34,7 @@ public class LikeDisLikeService {
             removeDisLike(userId, postId);
         }
 
-        return likeRepository.save(new Like(0, userRepository.findById(userId).get(), postId));
+            return likeRepository.save(new Like(0, userRepository.findById(userId).get(), postRepository.getById(postId)));
     }
 
     public void removeLike(long userId, long postId) {
@@ -46,7 +50,7 @@ public class LikeDisLikeService {
             removeLike(userId, postId);
         }
 
-        return disLikeRepository.save(new DisLike(0, userRepository.findById(userId).get(), postId));
+        return disLikeRepository.save(new DisLike(0, userRepository.findById(userId).get(), postRepository.getById(postId)));
     }
 
     public void removeDisLike(long userId, long postId) {
