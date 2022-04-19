@@ -38,12 +38,8 @@ public class Post {
     @NotNull
     private String contents;
 
-    @OneToMany
-    private List<Tag> tagList;
-
     @JsonIgnore
-    @ManyToOne
-    @JoinColumn(name = "user_id")
+    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     private User user;
 
     @JsonIgnore
