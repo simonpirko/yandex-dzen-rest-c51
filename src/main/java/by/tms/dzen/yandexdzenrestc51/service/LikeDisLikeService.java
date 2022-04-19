@@ -50,7 +50,7 @@ public class LikeDisLikeService {
             removeLike(userId, postId);
         }
 
-        return disLikeRepository.save(new DisLike(0, userRepository.findById(userId).get(), postId));
+        return disLikeRepository.save(new DisLike(0, userRepository.findById(userId).get(), postRepository.getById(postId)));
     }
 
     public void removeDisLike(long userId, long postId) {

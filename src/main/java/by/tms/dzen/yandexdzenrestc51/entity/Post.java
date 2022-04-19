@@ -51,10 +51,14 @@ public class Post {
     private List<Like> likes;
 
     @JsonIgnore
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "post")
     private List<DisLike> dislikes;
 
     @JsonIgnore
     @OneToMany
     private List<Comment> comments;
+
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "post")
+    private List<Tag> tags;
 }

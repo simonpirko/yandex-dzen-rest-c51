@@ -21,4 +21,6 @@ public class Tag {
     @NotNull
     private String name;
 
+    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    private Post post;
 }
