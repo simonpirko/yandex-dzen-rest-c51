@@ -8,6 +8,7 @@ import by.tms.dzen.yandexdzenrestc51.repository.CategoryRepository;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.Authorization;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Value;
@@ -43,7 +44,7 @@ public class CategoryController {
             @ApiResponse(responseCode = "405", description = "Invalid input"),
             @ApiResponse(responseCode = "409", description = "Already exists")
     })
-    @ApiOperation(value = "Create category", notes = "This can only be done by the logged in user")
+    @ApiOperation(value = "Create category", notes = "This can only be done by the logged in user", authorizations = { @Authorization(value="apiKey") })
     @PostMapping(produces = "application/json")
     public ResponseEntity<Category> save(@Valid @RequestBody
                                          @ApiParam(value = "Create category object") Category category,
@@ -63,7 +64,7 @@ public class CategoryController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successful operation"),
     })
-    @ApiOperation(value = "Get all categories", notes = "This can only be done by the logged in user")
+    @ApiOperation(value = "Get all categories", notes = "This can only be done by the logged in user", authorizations = { @Authorization(value="apiKey") })
     @GetMapping(produces = "application/json")
     public ResponseEntity<List<Category>> getAll() {
         return ResponseEntity.ok(categoryRepository.findAll());
@@ -73,7 +74,7 @@ public class CategoryController {
             @ApiResponse(responseCode = "200", description = "Successful operation"),
             @ApiResponse(responseCode = "405", description = "Invalid input")
     })
-    @ApiOperation(value = "Get category by ID", notes = "This can only be done by the logged in user")
+    @ApiOperation(value = "Get category by ID", notes = "This can only be done by the logged in user", authorizations = { @Authorization(value="apiKey") })
     @GetMapping(value = "/{id}", produces = "application/json")
     public ResponseEntity<Category> getById(@PathVariable("id") Long id) {
         if (id < 1) {
@@ -92,7 +93,7 @@ public class CategoryController {
             @ApiResponse(responseCode = "200", description = "Successful operation"),
             @ApiResponse(responseCode = "405", description = "Invalid input")
     })
-    @ApiOperation(value = "Delete category by ID", notes = "This can only be done by the logged in user")
+    @ApiOperation(value = "Delete category by ID", notes = "This can only be done by the logged in user", authorizations = { @Authorization(value="apiKey") })
     @DeleteMapping(value = "/{id}", produces = "application/json")
     public void delete(@PathVariable("id") Long id) {
         if (id < 1) {
@@ -109,7 +110,7 @@ public class CategoryController {
             @ApiResponse(responseCode = "200", description = "Successful operation"),
             @ApiResponse(responseCode = "405", description = "Invalid input")
     })
-    @ApiOperation(value = "Update category by ID", notes = "This can only be done by the logged in user")
+    @ApiOperation(value = "Update category by ID", notes = "This can only be done by the logged in user", authorizations = { @Authorization(value="apiKey") })
     @PutMapping(value = "/{id}", produces = "application/json")
     public ResponseEntity<Category> update(@PathVariable("id") Long id,
                                            @Valid @RequestBody Category category,

@@ -10,6 +10,7 @@ import by.tms.dzen.yandexdzenrestc51.repository.UserRepository;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.Authorization;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -35,7 +36,7 @@ public class PostController {
 
     @ApiResponse(responseCode = "200", description = "Successful operation")
     @ApiResponse(responseCode = "404", description = "Post not found")
-    @ApiOperation(value = "Getting a post by user id")
+    @ApiOperation(value = "Getting a post by user id", authorizations = { @Authorization(value="apiKey") })
     @GetMapping(value = "/{id}", produces = "application/json")
     public ResponseEntity<Post> getPost(@ApiParam(value = "An id is needed as a result of which a post under the given" +
             " id will be received. for test data use any number instead of id", example = "id")
@@ -55,7 +56,7 @@ public class PostController {
 
     @ApiResponse(responseCode = "200", description = "Successful operation")
     @ApiResponse(responseCode = "404", description = "User not found")
-    @ApiOperation(value = "Getting posts by user id")
+    @ApiOperation(value = "Getting posts by user id", authorizations = { @Authorization(value="apiKey") })
     @GetMapping(value = "/user/{userId}", produces = "application/json")
     public ResponseEntity<List<Post>> getAllPostByUserId(@ApiParam(value = "User ID is required to get all posts " +
             "of this user", example = "userId")
@@ -73,10 +74,9 @@ public class PostController {
         return ResponseEntity.ok(postLis);
     }
 
-
     @ApiResponse(responseCode = "200", description = "Successful operation")
     @ApiResponse(responseCode = "405", description = "Invalid input")
-    @ApiOperation(value = "Create post", notes = "This can only be done by the logged in user")
+    @ApiOperation(value = "Create post", notes = "This can only be done by the logged in user", authorizations = { @Authorization(value="apiKey") })
     @PostMapping(value = "/{userId}", produces = "application/json")
     public ResponseEntity<Post> createPost(@ApiParam(value = "Created post object for user", name = "body")
                                            @PathVariable("userId") Long userId,
@@ -100,7 +100,7 @@ public class PostController {
 
     @ApiResponse(responseCode = "200", description = "Successful operation")
     @ApiResponse(responseCode = "404", description = "Post not found")
-    @ApiOperation(value = "Delete post", notes = "This can only be done by the logged in user")
+    @ApiOperation(value = "Delete post", notes = "This can only be done by the logged in user", authorizations = { @Authorization(value="apiKey") })
     @DeleteMapping(value = "/{id}", produces = "application/json")
     public void deletePost(@ApiParam(value = "An id is needed as a result of which the post under the given id will " +
             "be deleted. for test data use any number instead of id", example = "id")
@@ -120,7 +120,7 @@ public class PostController {
     @ApiResponse(responseCode = "200", description = "Successful operation")
     @ApiResponse(responseCode = "404", description = "Post not found")
     @ApiResponse(responseCode = "405", description = "Invalid input")
-    @ApiOperation(value = "Updated post", notes = "This can only be done by the logged in user")
+    @ApiOperation(value = "Updated post", notes = "This can only be done by the logged in user", authorizations = { @Authorization(value="apiKey") })
     @PutMapping(value = "/{id}", produces = "application/json")
     public ResponseEntity<Post> updatePost(@ApiParam(value = "Post id is required to change", example = "id")
                                            @PathVariable("id") Long id, Post post) {
