@@ -10,25 +10,29 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 
-
 @Configuration
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
-
     private final JWTTokenProvider jwtTokenProvider;
-
     private static final String ADMIN_ENDPOINT = "/api/admin/**";
     private static final String LOGIN_ENDPOINT = "/api/v1/auth/**";
-
     private static final String[] PUBLIC_URLS = {
             "/v2/api-docs",
-            "/swagger-ui/index.html",
             "/swagger-resources/**",
             "configuration/**",
             "webjars/**",
             "/*.html",
             "/**/*.html",
             "/**/*.css",
-            "/**/*.js"
+            "/**/*.js",
+            "/swagger-resources",
+            "/configuration/ui",
+            "/configuration/security",
+            "/swagger-ui.html",
+            "/webjars/**",
+            "/v3/api-docs/**",
+            "/swagger-ui/**",
+            "/swagger-ui/",
+            "/swagger-ui"
     };
 
     public SecurityConfiguration(JWTTokenProvider jwtTokenProvider) {
