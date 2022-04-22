@@ -1,7 +1,7 @@
 package by.tms.dzen.yandexdzenrestc51.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,7 +13,6 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @Entity
 public class User {
 
@@ -44,6 +43,7 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Status status;
 
-    @OneToMany
-    private List<Like> likes;
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Post> posts;
 }

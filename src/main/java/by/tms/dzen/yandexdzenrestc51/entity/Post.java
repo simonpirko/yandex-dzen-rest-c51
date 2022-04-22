@@ -33,24 +33,32 @@ public class Post {
     private long numberOfReads;
 
     @NotNull
-    private long countLike;
-
-    @NotNull
-    private long countDizlike;
-
-    @NotNull
     private PostType postType;
 
     @NotNull
     private String contents;
 
-    @OneToMany
-    private List<Tag> tagList;
-
-//    @OneToMany
-//    private List<Сomment> commentList;
+    @JsonIgnore
+    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    private User user;
 
     @JsonIgnore
-    @OneToOne(fetch = FetchType.EAGER)
-    private User user;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "post")
+    private List<Like> likes;
+
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "post")
+    private List<DisLike> dislikes;
+
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "post")
+    private List<Comment> comments;
+
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "post")
+    private List<Tag> tags;
+
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "post")
+    private List<Category> categories;
 }
