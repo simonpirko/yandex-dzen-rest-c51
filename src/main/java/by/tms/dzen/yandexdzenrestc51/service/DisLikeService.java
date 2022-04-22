@@ -5,21 +5,22 @@ import by.tms.dzen.yandexdzenrestc51.exception.ExistsException;
 import by.tms.dzen.yandexdzenrestc51.repository.DisLikeRepository;
 import by.tms.dzen.yandexdzenrestc51.repository.LikeRepository;
 import by.tms.dzen.yandexdzenrestc51.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class DisLikeService {
-    @Autowired
-    private DisLikeRepository disLikeRepository;
+    private final DisLikeRepository disLikeRepository;
+    private final UserRepository userRepository;
+    private final LikeRepository likeRepository;
+    private final LikeService likeService;
 
-    @Autowired
-    private UserRepository userRepository;
+    public DisLikeService(DisLikeRepository disLikeRepository, UserRepository userRepository, LikeRepository likeRepository, LikeService likeService) {
+        this.disLikeRepository = disLikeRepository;
+        this.userRepository = userRepository;
+        this.likeRepository = likeRepository;
+        this.likeService = likeService;
+    }
 
-    @Autowired
-    private LikeRepository likeRepository;
-
-    @Autowired LikeService likeService;
 
     public DisLike addDisLike(long userId, long postId) {
         if (disLikeRepository.findByUserIdAndPostId(userId, postId).isPresent()) {
