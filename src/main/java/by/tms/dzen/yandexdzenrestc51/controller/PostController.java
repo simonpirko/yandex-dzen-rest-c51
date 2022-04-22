@@ -123,7 +123,7 @@ public class PostController {
     @ApiOperation(value = "Updated post", notes = "This can only be done by the logged in user", authorizations = { @Authorization(value="apiKey") })
     @PutMapping(value = "/{id}", produces = "application/json")
     public ResponseEntity<Post> updatePost(@ApiParam(value = "Post id is required to change", example = "id")
-                                           @PathVariable("id") Long id, Post post) {
+                                           @PathVariable("id") Long id, @RequestBody Post post) {
 
         if (id < 1) {
             throw new InvalidException();

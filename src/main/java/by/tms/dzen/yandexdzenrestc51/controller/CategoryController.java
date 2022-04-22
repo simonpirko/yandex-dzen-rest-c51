@@ -46,8 +46,8 @@ public class CategoryController {
     })
     @ApiOperation(value = "Create category", notes = "This can only be done by the logged in user", authorizations = { @Authorization(value="apiKey") })
     @PostMapping(produces = "application/json")
-    public ResponseEntity<Category> save(@Valid @RequestBody
-                                         @ApiParam(value = "Create category object") Category category,
+    public ResponseEntity<Category> save(@Valid @ApiParam(value = "Create category object")
+                                         @RequestBody Category category,
                                          BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
