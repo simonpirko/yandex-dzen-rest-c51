@@ -31,10 +31,12 @@ public class DisLikeController {
             @ApiResponse(responseCode = "405", description = "Invalid input"),
             @ApiResponse(responseCode = "409", description = "Already exists")
     })
-    @ApiOperation(value = "Add DisLike", notes = "This can only be done by the logged in user", authorizations = { @Authorization(value="apiKey") })
+    @ApiOperation(value = "Add DisLike", notes = "This can only be done by the logged in user", authorizations = {@Authorization(value = "apiKey")})
     @PostMapping("/{userId}/{postId}")
-    public ResponseEntity<DisLike> save(@PathVariable("userId") @ApiParam(value = "The user who added the dislike", example = "userId") Long userId,
-                                        @PathVariable("postId") @ApiParam(value = "Add dislike for the post", example = "postId") Long postId) {
+    public ResponseEntity<DisLike> save(@ApiParam(value = "The user who added the dislike", example = "userId")
+                                        @PathVariable("userId") Long userId,
+                                        @ApiParam(value = "Add dislike for the post", example = "postId")
+                                        @PathVariable("postId") Long postId) {
         likeValidator.validateID(userId, postId);
         likeValidator.existsByUserIdAndPostId(userId, postId);
 
@@ -46,10 +48,12 @@ public class DisLikeController {
             @ApiResponse(responseCode = "404", description = "Not found"),
             @ApiResponse(responseCode = "405", description = "Invalid input")
     })
-    @ApiOperation(value = "Delete DisLike", notes = "This can only be done by the logged in user", authorizations = { @Authorization(value="apiKey") })
+    @ApiOperation(value = "Delete DisLike", notes = "This can only be done by the logged in user", authorizations = {@Authorization(value = "apiKey")})
     @DeleteMapping("/{userId}/{postId}")
-    public void delete(@PathVariable("userId") @ApiParam(value = "The user who deleted the dislike", example = "userId") Long userId,
-                       @PathVariable("postId") @ApiParam(value = "Remove the dislike from the post", example = "postId") Long postId) {
+    public void delete(@ApiParam(value = "The user who deleted the dislike", example = "userId")
+                       @PathVariable("userId") Long userId,
+                       @ApiParam(value = "Remove the dislike from the post", example = "postId")
+                       @PathVariable("postId") Long postId) {
         likeValidator.validateID(userId, postId);
 
         if (likeValidator.existsByUserIdAndPostId(userId, postId)) {
