@@ -17,22 +17,22 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private static final String LOGIN_ENDPOINT = "/api/v1/auth/**";
     private static final String[] PUBLIC_URLS = {
             "/v2/api-docs",
+            "/swagger-resources",
             "/swagger-resources/**",
+            "/configuration/ui",
+            "/configuration/security",
+            "/swagger-ui.html",
+            "/swagger-ui/**",
+            "/swagger-ui/",
+            "/swagger-ui",
+            "/webjars/**",
+            "/v3/api-docs/**",
             "configuration/**",
             "webjars/**",
             "/*.html",
             "/**/*.html",
             "/**/*.css",
-            "/**/*.js",
-            "/swagger-resources",
-            "/configuration/ui",
-            "/configuration/security",
-            "/swagger-ui.html",
-            "/webjars/**",
-            "/v3/api-docs/**",
-            "/swagger-ui/**",
-            "/swagger-ui/",
-            "/swagger-ui"
+            "/**/*.js"
     };
 
     public SecurityConfiguration(JWTTokenProvider jwtTokenProvider) {

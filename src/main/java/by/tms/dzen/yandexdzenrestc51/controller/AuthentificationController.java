@@ -4,9 +4,7 @@ import by.tms.dzen.yandexdzenrestc51.configuration.security.jwt.JWTTokenProvider
 import by.tms.dzen.yandexdzenrestc51.dto.AuthRequestDTO;
 import by.tms.dzen.yandexdzenrestc51.dto.UserDTO;
 import by.tms.dzen.yandexdzenrestc51.entity.User;
-import by.tms.dzen.yandexdzenrestc51.mapper.UserConverter;
 import by.tms.dzen.yandexdzenrestc51.service.UserService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -36,7 +34,7 @@ public class AuthentificationController {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
-    @PostMapping("/logIn")
+    @PostMapping("/login")
     public ResponseEntity<Map<Object, Object>> logIn(@RequestBody AuthRequestDTO requestDto){
 
         String username = requestDto.getUsername();
@@ -58,6 +56,7 @@ public class AuthentificationController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         service.registration(userDTO);
+
         return new ResponseEntity<>(userDTO, HttpStatus.CREATED);
     }
 

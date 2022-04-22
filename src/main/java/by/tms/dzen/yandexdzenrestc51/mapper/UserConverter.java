@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class UserConverter {
-
     private static BCryptPasswordEncoder passwordEncoder;
 
     public UserConverter(BCryptPasswordEncoder passwordEncoder) {

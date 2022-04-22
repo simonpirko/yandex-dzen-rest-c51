@@ -7,9 +7,8 @@ import by.tms.dzen.yandexdzenrestc51.entity.User;
 import by.tms.dzen.yandexdzenrestc51.mapper.UserConverter;
 import by.tms.dzen.yandexdzenrestc51.repository.RoleRepository;
 import by.tms.dzen.yandexdzenrestc51.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +20,6 @@ public class UserService {
     public UserService(UserRepository userRepository, RoleRepository roleRepository) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
-
     }
 
     public void registration(UserDTO userDTO) {

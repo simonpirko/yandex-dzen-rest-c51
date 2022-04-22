@@ -8,6 +8,7 @@ import by.tms.dzen.yandexdzenrestc51.repository.UserRepository;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.Authorization;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -28,7 +29,7 @@ public class UserController {
 
     @ApiResponse(responseCode = "200", description = "Successful operation")
     @ApiResponse(responseCode = "404", description = "User not found")
-    @ApiOperation(value = "Get user by user name")
+    @ApiOperation(value = "Get user by user name", authorizations = { @Authorization(value="apiKey") })
     @GetMapping(value = "/{username}", produces = "application/json")
     public ResponseEntity<User> get(@ApiParam(value = "The name that needs to be fetched. Use user1 for testing", example = "username")
                                     @PathVariable("username") String username) {
@@ -65,7 +66,7 @@ public class UserController {
     @ApiResponse(responseCode = "200", description = "Successful operation")
     @ApiResponse(responseCode = "404", description = "User not found")
     @ApiResponse(responseCode = "405", description = "Invalid input")
-    @ApiOperation(value = "Updated user", notes = "This can only be done by the logged in user")
+    @ApiOperation(value = "Updated user", notes = "This can only be done by the logged in user", authorizations = { @Authorization(value="apiKey") })
     @PutMapping(value = "/{username}", produces = "application/json")
     public ResponseEntity<User> update(@ApiParam(value = "username that need to be updated", example = "username")
                                        @PathVariable("username") String username,
@@ -88,7 +89,7 @@ public class UserController {
 
     @ApiResponse(responseCode = "200", description = "Successful operation")
     @ApiResponse(responseCode = "404", description = "User not found")
-    @ApiOperation(value = "Delete user", notes = "This can only be done by the logged in user.")
+    @ApiOperation(value = "Delete user", notes = "This can only be done by the logged in user", authorizations = { @Authorization(value="apiKey") })
     @DeleteMapping(value = "/{username}", produces = "application/json")
     public void deleteUser(@ApiParam(value = "username that need to be deleted", example = "username")
                            @PathVariable("username") String username) {

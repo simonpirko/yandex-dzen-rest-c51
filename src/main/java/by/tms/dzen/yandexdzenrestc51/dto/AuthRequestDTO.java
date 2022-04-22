@@ -1,4 +1,5 @@
 package by.tms.dzen.yandexdzenrestc51.dto;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

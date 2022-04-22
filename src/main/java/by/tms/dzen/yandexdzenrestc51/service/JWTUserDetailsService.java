@@ -2,7 +2,6 @@ package by.tms.dzen.yandexdzenrestc51.service;
 
 import by.tms.dzen.yandexdzenrestc51.configuration.security.jwt.GenerateJWTUser;
 import by.tms.dzen.yandexdzenrestc51.entity.User;
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
