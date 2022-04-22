@@ -2,7 +2,7 @@ package by.tms.dzen.yandexdzenrestc51.controller;
 
 import by.tms.dzen.yandexdzenrestc51.entity.Like;
 import by.tms.dzen.yandexdzenrestc51.exception.NotFoundException;
-import by.tms.dzen.yandexdzenrestc51.service.LikeDisLikeService;
+import by.tms.dzen.yandexdzenrestc51.service.LikeService;
 import by.tms.dzen.yandexdzenrestc51.validator.LikeValidator;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -17,12 +17,12 @@ import org.springframework.web.bind.annotation.*;
 @Api(tags = "Like", description = "Operations with Like")
 @RequestMapping("/api/v1/like")
 public class LikeController {
-    private final LikeDisLikeService likeDisLikeService;
     private final LikeValidator likeValidator;
+    private final LikeService likeService;
 
-    public LikeController(LikeDisLikeService likeDisLikeService, LikeValidator likeValidator) {
-        this.likeDisLikeService = likeDisLikeService;
+    public LikeController(LikeValidator likeValidator, LikeService likeService) {
         this.likeValidator = likeValidator;
+        this.likeService = likeService;
     }
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successful operation"),
@@ -38,7 +38,7 @@ public class LikeController {
         likeValidator.validateID(userId, postId);
         likeValidator.existsByUserIdAndPostId(userId, postId);
 
-        return ResponseEntity.ok(likeDisLikeService.addLike(userId, postId));
+        return ResponseEntity.ok(likeService.addLike(userId, postId));
     }
 
     @ApiResponses(value = {
@@ -53,7 +53,7 @@ public class LikeController {
         likeValidator.validateID(userId, postId);
 
         if (likeValidator.existsByUserIdAndPostId(userId, postId)) {
-            likeDisLikeService.removeLike(userId, postId);
+            likeService.removeLike(userId, postId);
         } else {
             throw new NotFoundException();
         }

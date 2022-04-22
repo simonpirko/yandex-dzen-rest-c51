@@ -2,7 +2,7 @@ package by.tms.dzen.yandexdzenrestc51.controller;
 
 import by.tms.dzen.yandexdzenrestc51.entity.DisLike;
 import by.tms.dzen.yandexdzenrestc51.exception.NotFoundException;
-import by.tms.dzen.yandexdzenrestc51.service.LikeDisLikeService;
+import by.tms.dzen.yandexdzenrestc51.service.DisLikeService;
 import by.tms.dzen.yandexdzenrestc51.validator.LikeValidator;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -17,12 +17,12 @@ import org.springframework.web.bind.annotation.*;
 @Api(tags = "DisLike", description = "Operations with DisLike")
 @RequestMapping("/api/v1/dislike")
 public class DisLikeController {
-    private final LikeDisLikeService likeDisLikeService;
     private final LikeValidator likeValidator;
+    private final DisLikeService disLikeService;
 
-    public DisLikeController(LikeValidator likeValidator, LikeDisLikeService likeDisLikeService) {
+    public DisLikeController(LikeValidator likeValidator, DisLikeService disLikeService) {
         this.likeValidator = likeValidator;
-        this.likeDisLikeService = likeDisLikeService;
+        this.disLikeService = disLikeService;
     }
 
     @ApiResponses(value = {
@@ -38,7 +38,7 @@ public class DisLikeController {
         likeValidator.validateID(userId, postId);
         likeValidator.existsByUserIdAndPostId(userId, postId);
 
-        return ResponseEntity.ok(likeDisLikeService.addDisLike(userId, postId));
+        return ResponseEntity.ok(disLikeService.addDisLike(userId, postId));
     }
 
     @ApiResponses(value = {
@@ -53,7 +53,7 @@ public class DisLikeController {
         likeValidator.validateID(userId, postId);
 
         if (likeValidator.existsByUserIdAndPostId(userId, postId)) {
-            likeDisLikeService.removeDisLike(userId, postId);
+            disLikeService.removeDisLike(userId, postId);
         } else {
             throw new NotFoundException();
         }
