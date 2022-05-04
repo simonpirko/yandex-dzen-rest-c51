@@ -5,12 +5,14 @@ import by.tms.dzen.yandexdzenrestc51.exception.ExistsException;
 import by.tms.dzen.yandexdzenrestc51.exception.InvalidException;
 import by.tms.dzen.yandexdzenrestc51.exception.NotFoundException;
 import by.tms.dzen.yandexdzenrestc51.repository.UserRepository;
+import by.tms.dzen.yandexdzenrestc51.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.Authorization;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +24,8 @@ import javax.validation.Valid;
 @RequestMapping("/api/v1/user")
 public class UserController {
 
+    @Autowired
+    private UserService userService;
     private final UserRepository userRepository;
 
     public UserController(UserRepository userRepository) {
@@ -89,7 +93,9 @@ public class UserController {
         }
         User update = userRepository.findByUsername(username).get();
         user.setId(update.getId());
-        userRepository.save(user);
+//        userRepository.save(user);
+        userService.updateUser(user);
+
 
         return ResponseEntity.ok(update);
     }
@@ -107,6 +113,7 @@ public class UserController {
             throw new NotFoundException();
         }
         User user = userRepository.findByUsername(username).get();
-        userRepository.delete(user);
+//        userRepository.delete(user);
+        userService.deleteUser(user);
     }
 }
