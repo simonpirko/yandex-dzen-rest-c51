@@ -38,7 +38,13 @@ public class AuthentificationController {
     public ResponseEntity<Map<Object, Object>> logIn(@RequestBody AuthRequestDTO requestDto){
 
         String username = requestDto.getUsername();
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, requestDto.getPassword()));
+
+        try {
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, requestDto.getPassword()));
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+
         User user = service.findByUsername(username);
 
         String token = jwtTokenProvider.generateToken(username, user.getRoleList());
