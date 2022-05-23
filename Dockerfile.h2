@@ -2,5 +2,6 @@
 #docker run -d -p 8080:8080 tms/yandex-dzen-c51
 
 FROM openjdk:11
+LABEL maintainer="gemuzkm@gmail.com"
 COPY build/libs/*.jar /app.jar
 ENTRYPOINT ["java", "-jar", "/app.jar"]
