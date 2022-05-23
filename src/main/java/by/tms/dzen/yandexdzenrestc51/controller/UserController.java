@@ -23,13 +23,12 @@ import javax.validation.Valid;
 @Api(tags = "User", description = "Operation about user")
 @RequestMapping("/api/v1/user")
 public class UserController {
-
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
     private final UserRepository userRepository;
 
-    public UserController(UserRepository userRepository) {
+    public UserController(UserRepository userRepository, UserService userService) {
         this.userRepository = userRepository;
+        this.userService = userService;
     }
 
     @ApiResponses(value = {
@@ -56,7 +55,7 @@ public class UserController {
     })
     @ApiOperation(value = "Create user", notes = "This can only be done by the logged in user")
     @PostMapping(produces = "application/json")
-    public ResponseEntity<User> save(@ApiParam(value = "Created user object", name = "body")
+    public ResponseEntity<User> save(@ApiParam(value = "Created user object", example = "User")
                                      @Valid @RequestBody User user, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
@@ -81,7 +80,7 @@ public class UserController {
     @PutMapping(value = "/{username}", produces = "application/json")
     public ResponseEntity<User> update(@ApiParam(value = "username that need to be updated", example = "username")
                                        @PathVariable("username") String username,
-                                       @ApiParam(value = "Updated user object", example = "user") @Valid @RequestBody User user,
+                                       @ApiParam(value = "Updated user object", example = "User") @Valid @RequestBody User user,
                                        BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
@@ -95,7 +94,6 @@ public class UserController {
         user.setId(update.getId());
 //        userRepository.save(user);
         userService.updateUser(user);
-
 
         return ResponseEntity.ok(update);
     }
@@ -112,6 +110,7 @@ public class UserController {
         if (username == null | userRepository.findByUsername(username).isEmpty()) {
             throw new NotFoundException();
         }
+
         User user = userRepository.findByUsername(username).get();
 //        userRepository.delete(user);
         userService.deleteUser(user);
