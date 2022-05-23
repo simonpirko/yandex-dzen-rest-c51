@@ -37,6 +37,7 @@ public class DisLikeController {
                                         @PathVariable("userId") Long userId,
                                         @ApiParam(value = "Add dislike for the post", example = "postId")
                                         @PathVariable("postId") Long postId) {
+
         likeValidator.validateID(userId, postId);
         likeValidator.existsByUserIdAndPostId(userId, postId);
 
@@ -54,6 +55,7 @@ public class DisLikeController {
                        @PathVariable("userId") Long userId,
                        @ApiParam(value = "Remove the dislike from the post", example = "postId")
                        @PathVariable("postId") Long postId) {
+
         likeValidator.validateID(userId, postId);
 
         if (likeValidator.existsByUserIdAndPostId(userId, postId)) {

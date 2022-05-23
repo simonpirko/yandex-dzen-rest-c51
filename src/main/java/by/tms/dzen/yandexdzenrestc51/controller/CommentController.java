@@ -6,6 +6,7 @@ import by.tms.dzen.yandexdzenrestc51.exception.InvalidException;
 import by.tms.dzen.yandexdzenrestc51.exception.NotFoundException;
 import by.tms.dzen.yandexdzenrestc51.repository.CommentRepository;
 import by.tms.dzen.yandexdzenrestc51.repository.PostRepository;
+import by.tms.dzen.yandexdzenrestc51.validator.IdValidator;
 import by.tms.dzen.yandexdzenrestc51.validator.LikeValidator;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -13,6 +14,7 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.Authorization;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -25,14 +27,16 @@ import java.util.List;
 @Api(tags = "Comment", description = "Operations with comments")
 @RequestMapping("/api/v1/comment")
 public class CommentController {
+    private final IdValidator idValidator;
     private final LikeValidator likeValidator;
     private final CommentRepository commentRepository;
     private final PostRepository postRepository;
 
-    public CommentController(LikeValidator likeValidator, CommentRepository commentRepository, PostRepository postRepository) {
+    public CommentController(LikeValidator likeValidator, CommentRepository commentRepository, PostRepository postRepository, IdValidator idValidator) {
         this.likeValidator = likeValidator;
         this.commentRepository = commentRepository;
         this.postRepository = postRepository;
+        this.idValidator = idValidator;
     }
 
     @ApiResponses(value = {
@@ -47,11 +51,14 @@ public class CommentController {
                                         @PathVariable("postId") Long postId,
                                         @ApiParam(value = "Creating a comment object", name = "body comment")
                                         @Valid @RequestBody Comment comment, BindingResult bindingResult) {
+
         likeValidator.validateID(userId, postId);
         likeValidator.existsByUserIdAndPostId(userId, postId);
+
         if (bindingResult.hasErrors()) {
             throw new InvalidException();
         }
+
         comment.setCreateDate(LocalDateTime.now());
         comment.setPost(postRepository.getById(postId));
         Comment save = commentRepository.save(comment);
@@ -71,9 +78,12 @@ public class CommentController {
                                               @PathVariable("postId") Long postId,
                                               @ApiParam(value = "Id is required to receive a comment on this id", example = "1")
                                               @PathVariable("id") Long id) {
+
         likeValidator.validateID(userId, postId);
         likeValidator.existsByUserIdAndPostId(userId, postId);
-        if (id < 0 | commentRepository.findById(id).isEmpty()) {
+        idValidator.validateID(id);
+
+        if (commentRepository.findById(id).isEmpty()) {
             throw new NotFoundException();
         }
         Comment comment = commentRepository.findById(id).get();
@@ -89,9 +99,13 @@ public class CommentController {
     @GetMapping(value = "/{postId}", produces = "application/json")
     public ResponseEntity<List<Comment>> getAllCommentByPost(@ApiParam(value = "Post id is required to get all comments on this post", example = "1")
                                                              @PathVariable("postId") Long postId) {
-        if (postId < 0 | postRepository.findById(postId).isEmpty()) {
+
+        idValidator.validateID(postId);
+
+        if (postRepository.findById(postId).isEmpty()) {
             throw new NotFoundException();
         }
+
         List<Comment> commentList = commentRepository.findAllByPostId(postId).get();
 
         return ResponseEntity.ok(commentList);
@@ -112,11 +126,15 @@ public class CommentController {
                                                  @PathVariable("id") Long id,
                                                  @ApiParam(value = "Creating a modified comment object", name = "body comment")
                                                  @RequestBody Comment comment) {
+
         likeValidator.validateID(userId, postId);
         likeValidator.existsByUserIdAndPostId(userId, postId);
-        if (id < 0 | commentRepository.findById(id).isEmpty()) {
+        idValidator.validateID(id);
+
+        if (commentRepository.findById(id).isEmpty()) {
             throw new NotFoundException();
         }
+
         comment.setId(id);
         Comment save = commentRepository.save(comment);
 
@@ -135,11 +153,14 @@ public class CommentController {
                               @PathVariable("postId") Long postId,
                               @ApiParam(value = "Id is required to receive a comment on this id", example = "1")
                               @PathVariable("id") Long id) {
+
         likeValidator.validateID(userId, postId);
         likeValidator.existsByUserIdAndPostId(userId, postId);
+
         if (id < 0 | commentRepository.findById(id).isEmpty()) {
             throw new NotFoundException();
         }
+
         commentRepository.delete(commentRepository.getById(id));
     }
 }

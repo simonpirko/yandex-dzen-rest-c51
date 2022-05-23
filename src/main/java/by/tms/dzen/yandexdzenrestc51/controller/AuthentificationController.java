@@ -26,7 +26,6 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/v1/auth")
 public class AuthentificationController {
-
     private final UserService service;
     private final AuthenticationManager authenticationManager;
     private final JWTTokenProvider jwtTokenProvider;
@@ -70,7 +69,7 @@ public class AuthentificationController {
             throw new InvalidException();
         }
 
-        if (service.existByUsername(userDTO.getUsername()) || service.existByEmail(userDTO.getEmail())){
+        if (service.existByUsername(userDTO.getUsername()) || service.existByEmail(userDTO.getEmail())) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         service.registration(userDTO);
