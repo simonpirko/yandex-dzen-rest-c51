@@ -46,9 +46,7 @@ public class PostController {
             " id will be received. for test data use any number instead of id", example = "id")
                                         @PathVariable("id") Long id) {
 
-        if (id < 1) {
-            throw new InvalidException();
-        }
+        idValidator.validateID(id);
 
         if (postRepository.findById(id).isEmpty()) {
             throw new NotFoundException();
@@ -66,13 +64,12 @@ public class PostController {
             "of this user", example = "userId")
                                                          @PathVariable("userId") Long userId) {
 
-        if (userId < 1) {
-            throw new InvalidException();
-        }
+        idValidator.validateID(userId);
 
         if (userRepository.findById(userId).isEmpty()) {
             throw new NotFoundException();
         }
+
         List<Post> postLis = postRepository.findAllByUserId(userId).get();
 
         return ResponseEntity.ok(postLis);
@@ -86,7 +83,9 @@ public class PostController {
                                            @PathVariable("userId") Long userId,
                                            @Valid @RequestBody PostDTO postDto, BindingResult bindingResult) {
 
-        if (userId < 1 | bindingResult.hasErrors()) {
+        idValidator.validateID(userId);
+
+        if (bindingResult.hasErrors()) {
             throw new InvalidException();
         }
 
@@ -110,9 +109,7 @@ public class PostController {
             "be deleted. for test data use any number instead of id", example = "id")
                            @PathVariable("id") Long id) {
 
-        if (id < 1) {
-            throw new InvalidException();
-        }
+        idValidator.validateID(id);
 
         if (postRepository.findById(id).isEmpty()) {
             throw new NotFoundException();
@@ -129,9 +126,7 @@ public class PostController {
     public ResponseEntity<Post> updatePost(@ApiParam(value = "Post id is required to change", example = "id")
                                            @PathVariable("id") Long id, @RequestBody Post post) {
 
-        if (id < 1) {
-            throw new InvalidException();
-        }
+        idValidator.validateID(id);
 
         if (postRepository.findById(id).isEmpty()) {
             throw new NotFoundException();
