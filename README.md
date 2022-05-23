@@ -7,7 +7,6 @@
 - Spring Data JPA
 - Bean Validation
 - Logging SLF4j
-- Spring Testing
 - Gradle
 - Spring Security (JWT)
 - Docker
