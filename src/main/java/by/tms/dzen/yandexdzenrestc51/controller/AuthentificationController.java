@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,7 +36,7 @@ public class AuthentificationController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Map<Object, Object>> logIn(@RequestBody AuthRequestDTO requestDto){
+    public ResponseEntity<Map<Object, Object>> login(@Valid @RequestBody AuthRequestDTO requestDto){
 
         String username = requestDto.getUsername();
 
