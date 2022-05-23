@@ -1,5 +1,6 @@
 package by.tms.dzen.yandexdzenrestc51.configuration.security.jwt;
 
+import by.tms.dzen.yandexdzenrestc51.exception.InvalidException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,15 +19,17 @@ public class JWTTokenFilter extends GenericFilterBean {
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-
         String token = jwtTokenProvider.resolveToken((HttpServletRequest) servletRequest);
+
         if (token != null && jwtTokenProvider.validateToken(token)) {
             Authentication auth = jwtTokenProvider.getAuthentication(token);
-
             if (auth != null) {
                 SecurityContextHolder.getContext().setAuthentication(auth);
             }
+        } else {
+            SecurityContextHolder.getContext().setAuthentication(null);
         }
+
         filterChain.doFilter(servletRequest, servletResponse);
     }
 }
