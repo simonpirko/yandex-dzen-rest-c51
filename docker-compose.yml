@@ -1,0 +1,38 @@
+version: "3.8"
+services:
+  mysqldb:
+    image: mysql:8.0
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=admin
+      - MYSQL_DATABASE=yandex-dzen
+    ports:
+      - 3307:3306
+    networks:
+      - common-network
+
+  app:
+    depends_on:
+      - mysqldb
+    build: .
+    restart: always
+    ports:
+      - 8081:8080
+    networks:
+      - common-network
+    environment:
+      SPRING_APPLICATION_JSON: '{
+        "spring.datasource.url"  : "jdbc:mysql://mysqldb:3306/yandex-dzen?autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true",
+        "spring.datasource.username" : "root",
+        "spring.datasource.password" : "admin",
+        "spring.datasource.driver-class-name" : "com.mysql.cj.jdbc.Driver",
+        "spring.jpa.properties.hibernate.dialect" : "org.hibernate.dialect.MySQL8Dialect",
+        "spring.jpa.hibernate.ddl-auto" : "create-drop",
+        "spring.jpa.defer-datasource-initialization" : true,
+        "spring.sql.init.mode" : "always",
+        "spring.jpa.show-sql" : true
+      }'
+
+networks:
+  common-network:
+    driver: bridge
