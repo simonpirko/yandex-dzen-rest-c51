@@ -64,7 +64,12 @@ public class AuthentificationController {
     }
 
     @PostMapping("/reg")
-    public ResponseEntity<UserDTO> registration(@RequestBody UserDTO userDTO){
+    public ResponseEntity<UserDTO> registration(@Valid @RequestBody UserDTO userDTO,
+                                                BindingResult result) {
+        if (result.hasErrors()) {
+            throw new InvalidException();
+        }
+
         if (service.existByUsername(userDTO.getUsername()) || service.existByEmail(userDTO.getEmail())){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
