@@ -2,14 +2,15 @@
 
 ## Technology stack:
 - Java 11
-- Spring Boot
-- Database (MySQL and H2)
+- Spring Boot 2.6.6
+- Database (MySQL8 and H2)
 - Spring Data JPA
 - Bean Validation
 - Logging SLF4j
 - Gradle
 - Spring Security (JWT)
 - Docker
+- Docker Compose
 - Mapper (MupStruct)
 - Swagger
 - Lombok
