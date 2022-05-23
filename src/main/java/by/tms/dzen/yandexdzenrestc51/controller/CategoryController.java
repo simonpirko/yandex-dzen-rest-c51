@@ -5,12 +5,14 @@ import by.tms.dzen.yandexdzenrestc51.exception.ExistsException;
 import by.tms.dzen.yandexdzenrestc51.exception.InvalidException;
 import by.tms.dzen.yandexdzenrestc51.exception.NotFoundException;
 import by.tms.dzen.yandexdzenrestc51.repository.CategoryRepository;
+import by.tms.dzen.yandexdzenrestc51.validator.IdValidator;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.Authorization;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.ResponseEntity;
@@ -33,10 +35,13 @@ public class CategoryController {
 
     @Value("${exists}")
     private String msgExists;
+
+    private final IdValidator idValidator;
     private final CategoryRepository categoryRepository;
 
-    public CategoryController(CategoryRepository categoryRepository) {
+    public CategoryController(CategoryRepository categoryRepository, IdValidator idValidator) {
         this.categoryRepository = categoryRepository;
+        this.idValidator = idValidator;
     }
 
     @ApiResponses(value = {
@@ -77,9 +82,7 @@ public class CategoryController {
     @ApiOperation(value = "Get category by ID", notes = "This can only be done by the logged in user", authorizations = { @Authorization(value="apiKey") })
     @GetMapping(value = "/{id}", produces = "application/json")
     public ResponseEntity<Category> getById(@PathVariable("id") Long id) {
-        if (id < 1) {
-            throw new InvalidException();
-        }
+        idValidator.validateID(id);
 
         if (categoryRepository.findById(id).isEmpty()){
             throw new NotFoundException();
@@ -96,9 +99,7 @@ public class CategoryController {
     @ApiOperation(value = "Delete category by ID", notes = "This can only be done by the logged in user", authorizations = { @Authorization(value="apiKey") })
     @DeleteMapping(value = "/{id}", produces = "application/json")
     public void delete(@PathVariable("id") Long id) {
-        if (id < 1) {
-            throw new InvalidException();
-        }
+        idValidator.validateID(id);
 
         if (categoryRepository.findById(id).isEmpty()){
             throw new NotFoundException();

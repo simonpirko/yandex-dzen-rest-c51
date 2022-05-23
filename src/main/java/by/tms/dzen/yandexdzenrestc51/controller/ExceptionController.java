@@ -26,7 +26,7 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(InvalidException.class)
     public ResponseEntity<Object> invalidInputException(InvalidException ex) {
-        return new ResponseEntity(msgInvalidInput, HttpStatus.METHOD_NOT_ALLOWED);
+        return new ResponseEntity(msgInvalidInput, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(NotFoundException.class)

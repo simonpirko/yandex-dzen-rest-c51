@@ -4,6 +4,7 @@ import by.tms.dzen.yandexdzenrestc51.configuration.security.jwt.JWTTokenProvider
 import by.tms.dzen.yandexdzenrestc51.dto.AuthRequestDTO;
 import by.tms.dzen.yandexdzenrestc51.dto.UserDTO;
 import by.tms.dzen.yandexdzenrestc51.entity.User;
+import by.tms.dzen.yandexdzenrestc51.exception.InvalidException;
 import by.tms.dzen.yandexdzenrestc51.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,18 +13,19 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/auth")
 public class AuthentificationController {
-
     private final UserService service;
     private final AuthenticationManager authenticationManager;
     private final JWTTokenProvider jwtTokenProvider;
@@ -35,10 +37,20 @@ public class AuthentificationController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Map<Object, Object>> logIn(@RequestBody AuthRequestDTO requestDto){
+    public ResponseEntity<Map<Object, Object>> login(@Valid @RequestBody AuthRequestDTO requestDto,
+                                                     BindingResult result) {
+        if (result.hasErrors()) {
+            throw new InvalidException("Invalid username or password");
+        }
 
         String username = requestDto.getUsername();
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, requestDto.getPassword()));
+
+        try {
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, requestDto.getPassword()));
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+
         User user = service.findByUsername(username);
 
         String token = jwtTokenProvider.generateToken(username, user.getRoleList());
@@ -51,8 +63,13 @@ public class AuthentificationController {
     }
 
     @PostMapping("/reg")
-    public ResponseEntity<UserDTO> registration(@RequestBody UserDTO userDTO){
-        if (service.existByUsername(userDTO.getUsername()) || service.existByEmail(userDTO.getEmail())){
+    public ResponseEntity<UserDTO> registration(@Valid @RequestBody UserDTO userDTO,
+                                                BindingResult result) {
+        if (result.hasErrors()) {
+            throw new InvalidException();
+        }
+
+        if (service.existByUsername(userDTO.getUsername()) || service.existByEmail(userDTO.getEmail())) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         service.registration(userDTO);

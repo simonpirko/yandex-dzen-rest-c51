@@ -19,20 +19,22 @@ import javax.validation.Valid;
 @Api(tags = "Tag", description = "Access to tag")
 @RequestMapping("/api/v1/tag")
 public class TagController {
+    private final TagRepository tagRepository;
 
-    @Autowired
-    private TagRepository tagRepository;
+    public TagController(TagRepository tagRepository) {
+        this.tagRepository = tagRepository;
+    }
 
     @ApiResponse(responseCode = "200", description = "Successful operation")
     @ApiResponse(responseCode = "404", description = "Tag not found")
     @ApiResponse(responseCode = "405", description = "Invalid input")
-    @ApiOperation(value = "Save tag", notes = "This can only be done by the logged in user", authorizations = { @Authorization(value="apiKey") })
+    @ApiOperation(value = "Save tag", notes = "This can only be done by the logged in user", authorizations = {@Authorization(value = "apiKey")})
     @PostMapping
-    public ResponseEntity<Tag> save(@Valid @RequestBody Tag tag, BindingResult bindingResult){
-        if (bindingResult.hasErrors()){
+    public ResponseEntity<Tag> save(@Valid @RequestBody Tag tag, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
             throw new InvalidException();
         }
-        if (tagRepository.findByName(tag.getName()).isPresent()){
+        if (tagRepository.findByName(tag.getName()).isPresent()) {
             throw new NotFoundException();
         }
 
@@ -42,11 +44,11 @@ public class TagController {
 
     @ApiResponse(responseCode = "200", description = "Successful operation")
     @ApiResponse(responseCode = "404", description = "Tag not found")
-    @ApiOperation(value = "Delete tag", notes = "This can only be done by the logged in user", authorizations = { @Authorization(value="apiKey") })
+    @ApiOperation(value = "Delete tag", notes = "This can only be done by the logged in user", authorizations = {@Authorization(value = "apiKey")})
     @DeleteMapping(produces = "application/json")
-    public void delete(@RequestBody Tag tag){
-        if (tagRepository.findByName(tag.getName()).isEmpty()){
-            throw  new NotFoundException();
+    public void delete(@RequestBody Tag tag) {
+        if (tagRepository.findByName(tag.getName()).isEmpty()) {
+            throw new NotFoundException();
         }
 
         tagRepository.delete(tag);
