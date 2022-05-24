@@ -7,11 +7,13 @@ import by.tms.dzen.yandexdzenrestc51.entity.User;
 import by.tms.dzen.yandexdzenrestc51.mapper.UserConverter;
 import by.tms.dzen.yandexdzenrestc51.repository.RoleRepository;
 import by.tms.dzen.yandexdzenrestc51.repository.UserRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Service
 public class UserService {
     private final UserRepository userRepository;
@@ -47,5 +49,18 @@ public class UserService {
 
     public boolean existByEmail(String email) {
         return userRepository.existsByEmail(email);
+    }
+
+    public void deleteUser(User user) {
+        user.setStatus(Status.DELETED);
+        User deleted = userRepository.save(user);
+
+        log.info("IN deleteUser - user: {} successfully deleted", deleted);
+    }
+
+    public void updateUser(User user) {
+        User updated = userRepository.save(user);
+
+        log.info("IN updateUser - user: {} successfully updated", updated);
     }
 }
