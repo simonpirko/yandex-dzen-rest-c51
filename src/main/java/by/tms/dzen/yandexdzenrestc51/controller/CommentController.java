@@ -14,7 +14,6 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.Authorization;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -41,16 +40,18 @@ public class CommentController {
 
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successful operation"),
+            @ApiResponse(responseCode = "403", description = "Forbidden"),
             @ApiResponse(responseCode = "405", description = "Invalid input"),
     })
     @ApiOperation(value = "Create a new comment", authorizations = {@Authorization(value = "apiKey")})
     @PostMapping(value = "/{userId}/{postId}", produces = "application/json")
-    public ResponseEntity<Comment> save(@ApiParam(value = "UserId is required to get a user for this id", example = "test1")
+    public ResponseEntity<Comment> save(@ApiParam(value = "UserId is required to get a user for this id", example = "1")
                                         @PathVariable("userId") Long userId,
                                         @ApiParam(value = "Post id is required to get a post for this id", example = "1")
                                         @PathVariable("postId") Long postId,
                                         @ApiParam(value = "Creating a comment object", name = "body comment")
-                                        @Valid @RequestBody Comment comment, BindingResult bindingResult) {
+                                        @Valid @RequestBody Comment comment,
+                                        BindingResult bindingResult) {
 
         likeValidator.validateID(userId, postId);
         likeValidator.existsByUserIdAndPostId(userId, postId);
@@ -62,17 +63,17 @@ public class CommentController {
         comment.setCreateDate(LocalDateTime.now());
         comment.setPost(postRepository.getById(postId));
         Comment save = commentRepository.save(comment);
-
         return ResponseEntity.ok(save);
     }
 
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successful operation"),
+            @ApiResponse(responseCode = "403", description = "Forbidden"),
             @ApiResponse(responseCode = "404", description = "Not found")
     })
     @ApiOperation(value = "Get comment by id comment", authorizations = {@Authorization(value = "apiKey")})
     @GetMapping(value = "/{userId}/{postId}/{id}", produces = "application/json")
-    public ResponseEntity<Comment> getComment(@ApiParam(value = "UserId is required to get a user for this id", example = "test1")
+    public ResponseEntity<Comment> getComment(@ApiParam(value = "UserId is required to get a user for this id", example = "1")
                                               @PathVariable("userId") Long userId,
                                               @ApiParam(value = "Post id is required to get a post for this id", example = "1")
                                               @PathVariable("postId") Long postId,
@@ -86,13 +87,14 @@ public class CommentController {
         if (commentRepository.findById(id).isEmpty()) {
             throw new NotFoundException();
         }
-        Comment comment = commentRepository.findById(id).get();
 
+        Comment comment = commentRepository.findById(id).get();
         return ResponseEntity.ok(comment);
     }
 
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successful operation"),
+            @ApiResponse(responseCode = "403", description = "Forbidden"),
             @ApiResponse(responseCode = "404", description = "Not found")
     })
     @ApiOperation(value = "Getting all comments on a post with id", authorizations = {@Authorization(value = "apiKey")})
@@ -107,18 +109,18 @@ public class CommentController {
         }
 
         List<Comment> commentList = commentRepository.findAllByPostId(postId).get();
-
         return ResponseEntity.ok(commentList);
     }
 
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successful operation"),
+            @ApiResponse(responseCode = "403", description = "Forbidden"),
             @ApiResponse(responseCode = "404", description = "Comment not found"),
             @ApiResponse(responseCode = "405", description = "Invalid input")
     })
     @ApiOperation(value = "Updated comment", notes = "This can only be done by the logged in user", authorizations = {@Authorization(value = "apiKey")})
     @PutMapping(value = "/{userId}/{postId}/{id}", produces = "application/json")
-    public ResponseEntity<Comment> updateComment(@ApiParam(value = "UserId is required to get a user for this id", example = "test1")
+    public ResponseEntity<Comment> updateComment(@ApiParam(value = "UserId is required to get a user for this id", example = "1")
                                                  @PathVariable("userId") Long userId,
                                                  @ApiParam(value = "Post id is required to get a post for this id", example = "1")
                                                  @PathVariable("postId") Long postId,
@@ -147,7 +149,7 @@ public class CommentController {
     })
     @ApiOperation(value = "Deleting a comment", notes = "This can only be done by the logged in user", authorizations = {@Authorization(value = "apiKey")})
     @DeleteMapping(value = "/{userId}/{postId}/{id}", produces = "application/json")
-    public void deleteComment(@ApiParam(value = "UserId is required to get a user for this id", example = "test1")
+    public void deleteComment(@ApiParam(value = "UserId is required to get a user for this id", example = "1")
                               @PathVariable("userId") Long userId,
                               @ApiParam(value = "Post id is required to get a post for this id", example = "1")
                               @PathVariable("postId") Long postId,
