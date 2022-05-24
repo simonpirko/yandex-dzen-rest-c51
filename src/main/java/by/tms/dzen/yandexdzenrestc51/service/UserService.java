@@ -33,10 +33,8 @@ public class UserService {
         user.setRoleList(roles);
         user.setStatus(Status.ACTIVE);
         role.setUser(user);
-        User saveUser = userRepository.save(user);
+        userRepository.save(user);
         roleRepository.save(role);
-
-        log.info("IN register - user: {} successfully registered", saveUser);
     }
 
     public User findByUsername(String username) {
