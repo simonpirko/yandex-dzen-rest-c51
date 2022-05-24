@@ -28,14 +28,15 @@ public class LikeController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successful operation"),
             @ApiResponse(responseCode = "404", description = "Not found"),
+            @ApiResponse(responseCode = "403", description = "Forbidden"),
             @ApiResponse(responseCode = "405", description = "Invalid input"),
             @ApiResponse(responseCode = "409", description = "Already exists")
     })
     @ApiOperation(value = "Add Like", notes = "This can only be done by the logged in user", authorizations = {@Authorization(value = "apiKey")})
     @PostMapping(value = "/{userId}/{postId}", produces = "application/json")
-    public ResponseEntity<Like> save(@ApiParam(value = "The user who added the like", example = "userId")
+    public ResponseEntity<Like> save(@ApiParam(value = "The user who added the like", example = "1")
                                      @PathVariable("userId") Long userId,
-                                     @ApiParam(value = "Add like for the post", example = "postId")
+                                     @ApiParam(value = "Add like for the post", example = "1")
                                      @PathVariable("postId") Long postId) {
 
         likeValidator.validateID(userId, postId);
@@ -47,14 +48,16 @@ public class LikeController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successful operation"),
             @ApiResponse(responseCode = "404", description = "Not found"),
+            @ApiResponse(responseCode = "403", description = "Forbidden"),
             @ApiResponse(responseCode = "405", description = "Invalid input")
     })
     @ApiOperation(value = "Delete Like", notes = "This can only be done by the logged in user", authorizations = {@Authorization(value = "apiKey")})
     @DeleteMapping("/{userId}/{postId}")
-    public void delete(@ApiParam(value = "The user who deleted the like", example = "userId")
+    public void delete(@ApiParam(value = "The user who deleted the like", example = "1")
                        @PathVariable("userId") Long userId,
-                       @ApiParam(value = "Remove the like from the post", example = "postId")
+                       @ApiParam(value = "Remove the like from the post", example = "1")
                        @PathVariable("postId") Long postId) {
+
         likeValidator.validateID(userId, postId);
 
         if (likeValidator.existsByUserIdAndPostId(userId, postId)) {

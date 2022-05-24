@@ -12,7 +12,6 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.Authorization;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -33,11 +32,12 @@ public class UserController {
 
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successful operation"),
-            @ApiResponse(responseCode = "404", description = "User not found")
+            @ApiResponse(responseCode = "404", description = "User not found"),
+            @ApiResponse(responseCode = "403", description = "Forbidden")
     })
     @ApiOperation(value = "Get user by user name", authorizations = {@Authorization(value = "apiKey")})
     @GetMapping(value = "/{username}", produces = "application/json")
-    public ResponseEntity<User> get(@ApiParam(value = "The name that needs to be fetched. Use user1 for testing", example = "username")
+    public ResponseEntity<User> get(@ApiParam(value = "The name that needs to be fetched", example = "username")
                                     @PathVariable("username") String username) {
 
         if (username == null | userRepository.findByUsername(username).isEmpty()) {
@@ -51,9 +51,10 @@ public class UserController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successful operation"),
             @ApiResponse(responseCode = "405", description = "Invalid input"),
+            @ApiResponse(responseCode = "403", description = "Forbidden"),
             @ApiResponse(responseCode = "409", description = "User already exists")
     })
-    @ApiOperation(value = "Create user", notes = "This can only be done by the logged in user")
+    @ApiOperation(value = "Create user", notes = "This can only be done by the logged in user", authorizations = {@Authorization(value = "apiKey")})
     @PostMapping(produces = "application/json")
     public ResponseEntity<User> save(@ApiParam(value = "Created user object", example = "User")
                                      @Valid @RequestBody User user, BindingResult bindingResult) {
@@ -74,6 +75,7 @@ public class UserController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successful operation"),
             @ApiResponse(responseCode = "404", description = "User not found"),
+            @ApiResponse(responseCode = "403", description = "Forbidden"),
             @ApiResponse(responseCode = "405", description = "Invalid input")
     })
     @ApiOperation(value = "Updated user", notes = "This can only be done by the logged in user", authorizations = {@Authorization(value = "apiKey")})
@@ -92,7 +94,6 @@ public class UserController {
         }
         User update = userRepository.findByUsername(username).get();
         user.setId(update.getId());
-//        userRepository.save(user);
         userService.updateUser(user);
 
         return ResponseEntity.ok(update);
@@ -100,6 +101,7 @@ public class UserController {
 
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successful operation"),
+            @ApiResponse(responseCode = "403", description = "Forbidden"),
             @ApiResponse(responseCode = "404", description = "User not found")
     })
     @ApiOperation(value = "Delete user", notes = "This can only be done by the logged in user", authorizations = {@Authorization(value = "apiKey")})
@@ -112,7 +114,6 @@ public class UserController {
         }
 
         User user = userRepository.findByUsername(username).get();
-//        userRepository.delete(user);
         userService.deleteUser(user);
     }
 }

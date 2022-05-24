@@ -6,6 +6,8 @@ import by.tms.dzen.yandexdzenrestc51.dto.UserDTO;
 import by.tms.dzen.yandexdzenrestc51.entity.User;
 import by.tms.dzen.yandexdzenrestc51.exception.InvalidException;
 import by.tms.dzen.yandexdzenrestc51.service.UserService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,21 +26,24 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
+@Api(tags = "Authentication", description = "Operations with authentification")
 @RequestMapping("/api/v1/auth")
-public class AuthentificationController {
+public class AuthenticationController {
     private final UserService service;
     private final AuthenticationManager authenticationManager;
     private final JWTTokenProvider jwtTokenProvider;
 
-    public AuthentificationController(UserService service, AuthenticationManager authenticationManager, JWTTokenProvider jwtTokenProvider) {
+    public AuthenticationController(UserService service, AuthenticationManager authenticationManager, JWTTokenProvider jwtTokenProvider) {
         this.service = service;
         this.authenticationManager = authenticationManager;
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
     @PostMapping("/login")
+    @ApiOperation(value = "Login user", notes = "Authorization by login and password")
     public ResponseEntity<Map<Object, Object>> login(@Valid @RequestBody AuthRequestDTO requestDto,
                                                      BindingResult result) {
+
         if (result.hasErrors()) {
             throw new InvalidException("Invalid username or password");
         }
@@ -52,7 +57,6 @@ public class AuthentificationController {
         }
 
         User user = service.findByUsername(username);
-
         String token = jwtTokenProvider.generateToken(username, user.getRoleList());
 
         Map<Object, Object> resp = new HashMap<>();
@@ -63,6 +67,7 @@ public class AuthentificationController {
     }
 
     @PostMapping("/reg")
+    @ApiOperation(value = "Registration user", notes = "New user registration")
     public ResponseEntity<UserDTO> registration(@Valid @RequestBody UserDTO userDTO,
                                                 BindingResult result) {
         if (result.hasErrors()) {
@@ -78,6 +83,7 @@ public class AuthentificationController {
     }
 
     @GetMapping("/logout")
+    @ApiOperation(value = "Logout user", notes = "Ending a user session")
     public ResponseEntity<Map<Object, Object>> logOut(HttpSession session, HttpServletRequest request, HttpServletResponse response) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Map<Object, Object> resp = new HashMap<>();
