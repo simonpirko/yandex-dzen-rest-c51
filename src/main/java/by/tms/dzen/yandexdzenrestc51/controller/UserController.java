@@ -94,7 +94,7 @@ public class UserController {
         User update = userRepository.findByUsername(username).get();
         user.setId(update.getId());
 //        userRepository.save(user);
-        userService.updateUser(user);
+//        userService.updateUser(user);
 
 
         return ResponseEntity.ok(update);
@@ -114,6 +114,6 @@ public class UserController {
         }
         User user = userRepository.findByUsername(username).get();
 //        userRepository.delete(user);
-        userService.deleteUser(user);
+//        userService.deleteUser(user);
     }
 }

@@ -57,37 +57,37 @@
     );
 
     alter table category
-        add constraint category_post_fk
+        add constraint category_post_id_fk
             foreign key (post_id) references posts;
 
     alter table comments
-        add constraint comments_post_fk
+        add constraint comments_post_id_fk
             foreign key (post_id) references posts;
 
     alter table dislikes
-        add constraint dislikes_post_fk
+        add constraint dislikes_post_id_fk
             foreign key (post_id) references posts;
 
     alter table dislikes
-        add constraint dislikes_user_fk
+        add constraint dislikes_user_id_fk
             foreign key (user_id) references users;
 
     alter table likes
-        add constraint likes_post_fk
+        add constraint likes_post_id_fk
             foreign key (post_id) references posts;
 
     alter table likes
-        add constraint likes_user_fk
+        add constraint likes_user_id_fk
             foreign key (user_id) references users;
 
     alter table posts
-        add constraint posts_user_fk
+        add constraint posts_user_id_fk
             foreign key (user_id) references users;
 
     alter table roles
-        add constraint roles_user_fk
+        add constraint roles_user_id_fk
             foreign key (user_id) references users;
 
     alter table tags
-        add constraint tags_post_fk
+        add constraint tags_post_id_fk
             foreign key (post_id) references posts;
