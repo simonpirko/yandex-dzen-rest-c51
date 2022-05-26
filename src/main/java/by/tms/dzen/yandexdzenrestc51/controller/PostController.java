@@ -14,6 +14,7 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.Authorization;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +23,7 @@ import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Slf4j
 @RestController
 @Api(tags = "Post", description = "Access to posts")
 @RequestMapping("/api/v1/post")
@@ -105,6 +107,9 @@ public class PostController {
         post.setUser(userRepository.findById(userId).get());
         post.setCreateDate(LocalDateTime.now());
         Post save = postRepository.save(post);
+
+        log.info("New post added");
+
         return ResponseEntity.ok(save);
     }
 
@@ -126,6 +131,9 @@ public class PostController {
         }
 
         Post post = postRepository.findById(id).get();
+
+        log.info("Post status with id {} changed to deleted", id);
+
         postRepository.delete(post);
     }
 

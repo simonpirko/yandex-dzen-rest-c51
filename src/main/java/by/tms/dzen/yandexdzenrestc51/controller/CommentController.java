@@ -14,6 +14,7 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.Authorization;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +23,7 @@ import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Slf4j
 @RestController
 @Api(tags = "Comment", description = "Operations with comments")
 @RequestMapping("/api/v1/comment")
@@ -63,6 +65,9 @@ public class CommentController {
         comment.setCreateDate(LocalDateTime.now());
         comment.setPost(postRepository.getById(postId));
         Comment save = commentRepository.save(comment);
+
+        log.info("Added a new comment named");
+
         return ResponseEntity.ok(save);
     }
 
@@ -162,6 +167,8 @@ public class CommentController {
         if (id < 0 | commentRepository.findById(id).isEmpty()) {
             throw new NotFoundException();
         }
+
+        log.info("Comment status with id {} changed to deleted", id);
 
         commentRepository.delete(commentRepository.getById(id));
     }

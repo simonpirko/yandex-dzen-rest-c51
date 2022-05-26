@@ -12,6 +12,7 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.Authorization;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
+@Slf4j
 @RestController
 @Api(tags = "Category", description = "Operations with category")
 @RequestMapping("/api/v1/category")
@@ -50,6 +52,8 @@ public class CategoryController {
         if (categoryRepository.findByName(category.getName()).isPresent()) {
             throw new ExistsException();
         }
+
+        log.info("Added a new category named {}", category.getName());
 
         return ResponseEntity.ok(categoryRepository.save(category));
     }
@@ -99,6 +103,8 @@ public class CategoryController {
         if (categoryRepository.findById(id).isEmpty()) {
             throw new NotFoundException();
         }
+
+        log.info("Category status with id {} changed to deleted", id);
 
         categoryRepository.deleteById(id);
     }
