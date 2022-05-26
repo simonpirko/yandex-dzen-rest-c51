@@ -13,7 +13,6 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @Entity
 public class Category {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -28,6 +27,9 @@ public class Category {
     private String image;
 
     private long countSubscriber;
+
+    @JsonIgnore
+    private Status status;
 
     @JsonIgnore
     @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})

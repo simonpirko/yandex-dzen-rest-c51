@@ -5,6 +5,7 @@ import by.tms.dzen.yandexdzenrestc51.exception.ExistsException;
 import by.tms.dzen.yandexdzenrestc51.exception.InvalidException;
 import by.tms.dzen.yandexdzenrestc51.exception.NotFoundException;
 import by.tms.dzen.yandexdzenrestc51.repository.CategoryRepository;
+import by.tms.dzen.yandexdzenrestc51.service.CategoryService;
 import by.tms.dzen.yandexdzenrestc51.validator.IdValidator;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -23,12 +24,14 @@ import java.util.List;
 @Api(tags = "Category", description = "Operations with category")
 @RequestMapping("/api/v1/category")
 public class CategoryController {
+    private final CategoryService categoryService;
     private final IdValidator idValidator;
     private final CategoryRepository categoryRepository;
 
-    public CategoryController(CategoryRepository categoryRepository, IdValidator idValidator) {
+    public CategoryController(CategoryRepository categoryRepository, IdValidator idValidator, CategoryService categoryService) {
         this.categoryRepository = categoryRepository;
         this.idValidator = idValidator;
+        this.categoryService = categoryService;
     }
 
     @ApiResponses(value = {
@@ -100,7 +103,7 @@ public class CategoryController {
             throw new NotFoundException();
         }
 
-        categoryRepository.deleteById(id);
+        categoryService.delete(id);
     }
 
     @ApiResponses(value = {
