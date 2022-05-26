@@ -2,8 +2,10 @@ package by.tms.dzen.yandexdzenrestc51.configuration.security;
 
 import by.tms.dzen.yandexdzenrestc51.configuration.security.jwt.JWTConfig;
 import by.tms.dzen.yandexdzenrestc51.configuration.security.jwt.JWTTokenProvider;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -11,29 +13,25 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 
 @Configuration
+@PropertySource("classpath:endpoint.properties")
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private final JWTTokenProvider jwtTokenProvider;
-    private static final String ADMIN_ENDPOINT = "/api/admin/**";
-    private static final String LOGIN_ENDPOINT = "/api/v1/auth/**";
-    private static final String[] PUBLIC_URLS = {
-            "/v2/api-docs",
-            "/swagger-resources",
-            "/swagger-resources/**",
-            "/configuration/ui",
-            "/configuration/security",
-            "/swagger-ui.html",
-            "/swagger-ui/**",
-            "/swagger-ui/",
-            "/swagger-ui",
-            "/webjars/**",
-            "/v3/api-docs/**",
-            "configuration/**",
-            "webjars/**",
-            "/*.html",
-            "/**/*.html",
-            "/**/*.css",
-            "/**/*.js"
-    };
+
+    @Value("${ADMIN_ENDPOINT}")
+    private String ADMIN_ENDPOINT;
+
+    @Value("${LOGIN_ENDPOINT}")
+    private String LOGIN_ENDPOINT;
+
+    @Value("${PUBLIC_URLS}")
+    private String[] PUBLIC_URLS;
+
+    @Value("${DB_H2_ENDPOINT}")
+    private String DB_H2_ENDPOINT;
+
+    @Value("${ADMIN_ROLE_NAME}")
+    private String ADMIN_ROLE_NAME;
+
 
     public SecurityConfiguration(JWTTokenProvider jwtTokenProvider) {
         this.jwtTokenProvider = jwtTokenProvider;
@@ -53,9 +51,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers(LOGIN_ENDPOINT).permitAll()
-                .antMatchers(ADMIN_ENDPOINT).hasAuthority("ADMIN")
+                .antMatchers(ADMIN_ENDPOINT).hasAuthority(ADMIN_ROLE_NAME)
                 .antMatchers(HttpMethod.GET, PUBLIC_URLS).permitAll()
-                .antMatchers("/db/**").permitAll()
+                .antMatchers(DB_H2_ENDPOINT).permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .apply(new JWTConfig(jwtTokenProvider));
