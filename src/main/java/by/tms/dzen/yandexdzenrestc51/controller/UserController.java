@@ -118,7 +118,5 @@ public class UserController {
 
         User user = userRepository.findByUsername(username).get();
         userService.deleteUser(user);
-
-        log.info("The status of the user with the name {} has been changed to deleted", username);
     }
 }
