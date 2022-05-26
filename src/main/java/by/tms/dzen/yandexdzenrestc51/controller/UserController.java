@@ -12,12 +12,14 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.Authorization;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+@Slf4j
 @RestController
 @Api(tags = "User", description = "Operation about user")
 @RequestMapping("/api/v1/user")
@@ -68,6 +70,7 @@ public class UserController {
         }
 
         User save = userRepository.save(user);
+
 
         return ResponseEntity.ok(save);
     }

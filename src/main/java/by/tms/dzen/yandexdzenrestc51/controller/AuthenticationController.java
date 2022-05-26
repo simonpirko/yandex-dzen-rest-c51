@@ -8,6 +8,7 @@ import by.tms.dzen.yandexdzenrestc51.exception.InvalidException;
 import by.tms.dzen.yandexdzenrestc51.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -25,6 +26,7 @@ import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
 
+@Slf4j
 @RestController
 @Api(tags = "Authentication", description = "Operations with authentification")
 @RequestMapping("/api/v1/auth")
@@ -63,6 +65,8 @@ public class AuthenticationController {
         resp.put("username", username);
         resp.put("token", token);
 
+        log.info("The user with the name {} is logged into the programs", requestDto.getUsername());
+
         return new ResponseEntity<>(resp, HttpStatus.OK);
     }
 
@@ -79,6 +83,8 @@ public class AuthenticationController {
         }
         service.registration(userDTO);
 
+        log.info("User named {} registered", userDTO.getUsername());
+
         return new ResponseEntity<>(userDTO, HttpStatus.CREATED);
     }
 
@@ -93,6 +99,8 @@ public class AuthenticationController {
             resp.put("session, lastAccessedTime", session.getLastAccessedTime());
             new SecurityContextLogoutHandler().logout(request, response, auth);
         }
+
+        log.info("The user with the name {} has left the program", auth.getName());
 
         return new ResponseEntity<>(resp, HttpStatus.OK);
     }
