@@ -4,6 +4,7 @@ import by.tms.dzen.yandexdzenrestc51.entity.Tag;
 import by.tms.dzen.yandexdzenrestc51.exception.InvalidException;
 import by.tms.dzen.yandexdzenrestc51.exception.NotFoundException;
 import by.tms.dzen.yandexdzenrestc51.repository.TagRepository;
+import by.tms.dzen.yandexdzenrestc51.service.TagService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
@@ -21,10 +22,13 @@ import javax.validation.Valid;
 @Api(tags = "Tag", description = "Access to tag")
 @RequestMapping("/api/v1/tag")
 public class TagController {
+    private final TagService tagService;
+
     private final TagRepository tagRepository;
 
-    public TagController(TagRepository tagRepository) {
+    public TagController(TagRepository tagRepository, TagService tagService) {
         this.tagRepository = tagRepository;
+        this.tagService = tagService;
     }
 
     @ApiResponses(value = {
@@ -67,8 +71,6 @@ public class TagController {
             throw new NotFoundException();
         }
 
-        log.info("The status of the tag with the name {} changed to deleted", tag.getName());
-
-        tagRepository.delete(tag);
+        tagService.delete(tag.getId());
     }
 }

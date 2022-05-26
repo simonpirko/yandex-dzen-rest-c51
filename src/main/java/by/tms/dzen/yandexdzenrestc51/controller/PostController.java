@@ -7,6 +7,7 @@ import by.tms.dzen.yandexdzenrestc51.exception.NotFoundException;
 import by.tms.dzen.yandexdzenrestc51.mapper.PostMapper;
 import by.tms.dzen.yandexdzenrestc51.repository.PostRepository;
 import by.tms.dzen.yandexdzenrestc51.repository.UserRepository;
+import by.tms.dzen.yandexdzenrestc51.service.PostService;
 import by.tms.dzen.yandexdzenrestc51.validator.IdValidator;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -14,7 +15,6 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.Authorization;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -23,21 +23,22 @@ import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Slf4j
 @RestController
 @Api(tags = "Post", description = "Access to posts")
 @RequestMapping("/api/v1/post")
 public class PostController {
+    private final PostService postService;
     private final IdValidator idValidator;
     private final PostRepository postRepository;
     private final UserRepository userRepository;
     private final PostMapper postMapper;
 
-    public PostController(PostRepository postRepository, UserRepository userRepository, PostMapper postMapper, IdValidator idValidator) {
+    public PostController(PostRepository postRepository, UserRepository userRepository, PostMapper postMapper, IdValidator idValidator, PostService postService) {
         this.postRepository = postRepository;
         this.userRepository = userRepository;
         this.postMapper = postMapper;
         this.idValidator = idValidator;
+        this.postService = postService;
     }
 
     @ApiResponses(value = {
@@ -107,9 +108,6 @@ public class PostController {
         post.setUser(userRepository.findById(userId).get());
         post.setCreateDate(LocalDateTime.now());
         Post save = postRepository.save(post);
-
-        log.info("New post added");
-
         return ResponseEntity.ok(save);
     }
 
@@ -130,11 +128,7 @@ public class PostController {
             throw new NotFoundException();
         }
 
-        Post post = postRepository.findById(id).get();
-
-        log.info("Post status with id {} changed to deleted", id);
-
-        postRepository.delete(post);
+        postService.delete(id);
     }
 
     @ApiResponses(value = {

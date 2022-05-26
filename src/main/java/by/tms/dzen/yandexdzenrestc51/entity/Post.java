@@ -18,7 +18,6 @@ import java.util.List;
 @AllArgsConstructor
 @Table(name = "POSTS")
 public class Post {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -61,4 +60,7 @@ public class Post {
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "post")
     private List<Category> categories;
+
+    @JsonIgnore
+    private Status status;
 }
