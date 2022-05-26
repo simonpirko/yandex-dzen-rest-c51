@@ -5,6 +5,7 @@ import by.tms.dzen.yandexdzenrestc51.exception.ExistsException;
 import by.tms.dzen.yandexdzenrestc51.exception.InvalidException;
 import by.tms.dzen.yandexdzenrestc51.exception.NotFoundException;
 import by.tms.dzen.yandexdzenrestc51.repository.CategoryRepository;
+import by.tms.dzen.yandexdzenrestc51.service.CategoryService;
 import by.tms.dzen.yandexdzenrestc51.validator.IdValidator;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -12,6 +13,7 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.Authorization;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +25,8 @@ import java.util.List;
 @Api(tags = "Category", description = "Operations with category")
 @RequestMapping("/api/v1/category")
 public class CategoryController {
+    @Autowired
+    private CategoryService categoryService;
     private final IdValidator idValidator;
     private final CategoryRepository categoryRepository;
 
@@ -100,7 +104,7 @@ public class CategoryController {
             throw new NotFoundException();
         }
 
-        categoryRepository.deleteById(id);
+        categoryService.delete(id);
     }
 
     @ApiResponses(value = {
