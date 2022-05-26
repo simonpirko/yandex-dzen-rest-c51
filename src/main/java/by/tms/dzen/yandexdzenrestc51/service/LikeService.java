@@ -6,10 +6,11 @@ import by.tms.dzen.yandexdzenrestc51.repository.DisLikeRepository;
 import by.tms.dzen.yandexdzenrestc51.repository.LikeRepository;
 import by.tms.dzen.yandexdzenrestc51.repository.PostRepository;
 import by.tms.dzen.yandexdzenrestc51.repository.UserRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
-
+@Slf4j
 @Service
 public class LikeService {
     private final LikeRepository likeRepository;
@@ -40,5 +41,7 @@ public class LikeService {
 
     public void removeLike(long userId, long postId) {
         likeRepository.findByUserIdAndPostId(userId, postId).ifPresent(likeRepository::delete);
+
+        log.info("IN removeLike - like with userId: {} and postId: {} successfully deleted", userId, postId);
     }
 }

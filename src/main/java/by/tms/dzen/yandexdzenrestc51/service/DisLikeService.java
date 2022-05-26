@@ -6,26 +6,25 @@ import by.tms.dzen.yandexdzenrestc51.repository.DisLikeRepository;
 import by.tms.dzen.yandexdzenrestc51.repository.LikeRepository;
 import by.tms.dzen.yandexdzenrestc51.repository.PostRepository;
 import by.tms.dzen.yandexdzenrestc51.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 public class DisLikeService {
     private final DisLikeRepository disLikeRepository;
     private final UserRepository userRepository;
     private final LikeRepository likeRepository;
     private final LikeService likeService;
+    private final PostRepository postRepository;
 
-    @Autowired
-    private PostRepository postRepository;
-
-    public DisLikeService(DisLikeRepository disLikeRepository, UserRepository userRepository, LikeRepository likeRepository, LikeService likeService) {
+    public DisLikeService(DisLikeRepository disLikeRepository, UserRepository userRepository, LikeRepository likeRepository, LikeService likeService, PostRepository postRepository) {
         this.disLikeRepository = disLikeRepository;
         this.userRepository = userRepository;
         this.likeRepository = likeRepository;
         this.likeService = likeService;
+        this.postRepository = postRepository;
     }
-
 
     public DisLike addDisLike(long userId, long postId) {
         if (disLikeRepository.findByUserIdAndPostId(userId, postId).isPresent()) {
@@ -41,5 +40,7 @@ public class DisLikeService {
 
     public void removeDisLike(long userId, long postId) {
         disLikeRepository.findByUserIdAndPostId(userId, postId).ifPresent(disLikeRepository::delete);
+
+        log.info("IN removeDisLike - dislike with userId: {} and postId: {} successfully deleted", userId, postId);
     }
 }

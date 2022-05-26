@@ -13,7 +13,6 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Table(name = "DISLIKES")
 public class DisLike {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;

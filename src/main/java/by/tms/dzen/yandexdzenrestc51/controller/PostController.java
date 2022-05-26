@@ -7,6 +7,7 @@ import by.tms.dzen.yandexdzenrestc51.exception.NotFoundException;
 import by.tms.dzen.yandexdzenrestc51.mapper.PostMapper;
 import by.tms.dzen.yandexdzenrestc51.repository.PostRepository;
 import by.tms.dzen.yandexdzenrestc51.repository.UserRepository;
+import by.tms.dzen.yandexdzenrestc51.service.PostService;
 import by.tms.dzen.yandexdzenrestc51.validator.IdValidator;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -26,16 +27,18 @@ import java.util.List;
 @Api(tags = "Post", description = "Access to posts")
 @RequestMapping("/api/v1/post")
 public class PostController {
+    private final PostService postService;
     private final IdValidator idValidator;
     private final PostRepository postRepository;
     private final UserRepository userRepository;
     private final PostMapper postMapper;
 
-    public PostController(PostRepository postRepository, UserRepository userRepository, PostMapper postMapper, IdValidator idValidator) {
+    public PostController(PostRepository postRepository, UserRepository userRepository, PostMapper postMapper, IdValidator idValidator, PostService postService) {
         this.postRepository = postRepository;
         this.userRepository = userRepository;
         this.postMapper = postMapper;
         this.idValidator = idValidator;
+        this.postService = postService;
     }
 
     @ApiResponses(value = {
@@ -125,8 +128,7 @@ public class PostController {
             throw new NotFoundException();
         }
 
-        Post post = postRepository.findById(id).get();
-        postRepository.delete(post);
+        postService.delete(id);
     }
 
     @ApiResponses(value = {
