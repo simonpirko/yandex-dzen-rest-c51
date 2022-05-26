@@ -36,7 +36,7 @@ public class SwaggerConfiguration {
         return new ApiInfoBuilder()
                 .title("Yandez DZEN REST API Document")
                 .description("TMS C-51 REST API for YANDEX DZEN")
-                .contact(new Contact("GEMUZKM", "", "gemuzkm@gmail.com"))
+                .contact(new Contact("Maksim Kerus", "", "gemuzkm@gmail.com"))
                 .version("1.0")
                 .build();
     }
