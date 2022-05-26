@@ -13,7 +13,6 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.Authorization;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -25,14 +24,14 @@ import java.util.List;
 @Api(tags = "Category", description = "Operations with category")
 @RequestMapping("/api/v1/category")
 public class CategoryController {
-    @Autowired
-    private CategoryService categoryService;
+    private final CategoryService categoryService;
     private final IdValidator idValidator;
     private final CategoryRepository categoryRepository;
 
-    public CategoryController(CategoryRepository categoryRepository, IdValidator idValidator) {
+    public CategoryController(CategoryRepository categoryRepository, IdValidator idValidator, CategoryService categoryService) {
         this.categoryRepository = categoryRepository;
         this.idValidator = idValidator;
+        this.categoryService = categoryService;
     }
 
     @ApiResponses(value = {

@@ -6,6 +6,7 @@ import by.tms.dzen.yandexdzenrestc51.exception.InvalidException;
 import by.tms.dzen.yandexdzenrestc51.exception.NotFoundException;
 import by.tms.dzen.yandexdzenrestc51.repository.CommentRepository;
 import by.tms.dzen.yandexdzenrestc51.repository.PostRepository;
+import by.tms.dzen.yandexdzenrestc51.service.CommentService;
 import by.tms.dzen.yandexdzenrestc51.validator.IdValidator;
 import by.tms.dzen.yandexdzenrestc51.validator.LikeValidator;
 import io.swagger.annotations.Api;
@@ -26,16 +27,18 @@ import java.util.List;
 @Api(tags = "Comment", description = "Operations with comments")
 @RequestMapping("/api/v1/comment")
 public class CommentController {
+    private final CommentService commentService;
     private final IdValidator idValidator;
     private final LikeValidator likeValidator;
     private final CommentRepository commentRepository;
     private final PostRepository postRepository;
 
-    public CommentController(LikeValidator likeValidator, CommentRepository commentRepository, PostRepository postRepository, IdValidator idValidator) {
+    public CommentController(LikeValidator likeValidator, CommentRepository commentRepository, PostRepository postRepository, IdValidator idValidator, CommentService commentService) {
         this.likeValidator = likeValidator;
         this.commentRepository = commentRepository;
         this.postRepository = postRepository;
         this.idValidator = idValidator;
+        this.commentService = commentService;
     }
 
     @ApiResponses(value = {
@@ -163,6 +166,6 @@ public class CommentController {
             throw new NotFoundException();
         }
 
-        commentRepository.delete(commentRepository.getById(id));
+       commentService.delete(id);
     }
 }
