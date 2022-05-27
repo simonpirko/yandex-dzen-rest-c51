@@ -14,6 +14,7 @@
 - Mapper (MupStruct)
 - Swagger
 - Lombok
+- Flyway
 
 ### Board (trello.com): 
 
