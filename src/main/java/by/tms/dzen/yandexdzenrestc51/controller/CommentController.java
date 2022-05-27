@@ -52,7 +52,7 @@ public class CommentController {
                                         @PathVariable("userId") Long userId,
                                         @ApiParam(value = "Post id is required to get a post for this id", example = "1")
                                         @PathVariable("postId") Long postId,
-                                        @ApiParam(value = "Creating a comment object", name = "body comment")
+                                        @ApiParam(value = "Creating a comment object", example ="Comment")
                                         @Valid @RequestBody Comment comment,
                                         BindingResult bindingResult) {
 
@@ -129,7 +129,7 @@ public class CommentController {
                                                  @PathVariable("postId") Long postId,
                                                  @ApiParam(value = "Id is required to receive a comment on this id", example = "1")
                                                  @PathVariable("id") Long id,
-                                                 @ApiParam(value = "Creating a modified comment object", name = "body comment")
+                                                 @ApiParam(value = "Creating a modified comment object", example ="Comment")
                                                  @RequestBody Comment comment) {
 
         likeValidator.validateID(userId, postId);

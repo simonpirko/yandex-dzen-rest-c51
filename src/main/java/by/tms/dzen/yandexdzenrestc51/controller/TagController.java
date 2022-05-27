@@ -7,6 +7,7 @@ import by.tms.dzen.yandexdzenrestc51.repository.TagRepository;
 import by.tms.dzen.yandexdzenrestc51.service.TagService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.Authorization;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -39,7 +40,8 @@ public class TagController {
     })
     @ApiOperation(value = "Save tag", notes = "This can only be done by the logged in user", authorizations = {@Authorization(value = "apiKey")})
     @PostMapping
-    public ResponseEntity<Tag> save(@Valid @RequestBody Tag tag, BindingResult bindingResult) {
+    public ResponseEntity<Tag> save(@ApiParam(value = "Create new tag object", example = "Tag")
+                                         @Valid @RequestBody Tag tag, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new InvalidException();
         }
