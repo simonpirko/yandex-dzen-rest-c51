@@ -13,6 +13,7 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.Authorization;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -50,11 +51,7 @@ public class CategoryController {
             throw new InvalidException();
         }
 
-        if (categoryRepository.findByName(category.getName()).isPresent()) {
-            throw new ExistsException();
-        }
-
-        return ResponseEntity.ok(categoryRepository.save(category));
+        return ResponseEntity.ok(categoryService.save(category));
     }
 
     @ApiResponses(value = {
@@ -78,13 +75,7 @@ public class CategoryController {
                                             @PathVariable("id") Long id) {
 
         idValidator.validateID(id);
-
-        if (categoryRepository.findById(id).isEmpty()) {
-            throw new NotFoundException();
-        }
-
-        Category category = categoryRepository.findById(id).get();
-        return ResponseEntity.ok(category);
+        return ResponseEntity.ok(categoryService.findById(id));
     }
 
     @ApiResponses(value = {
@@ -98,11 +89,6 @@ public class CategoryController {
                        @PathVariable("id") Long id) {
 
         idValidator.validateID(id);
-
-        if (categoryRepository.findById(id).isEmpty()) {
-            throw new NotFoundException();
-        }
-
         categoryService.delete(id);
     }
 
@@ -118,16 +104,14 @@ public class CategoryController {
                                            @Valid @RequestBody Category category,
                                            BindingResult bindingResult) {
 
+        idValidator.validateID(id);
+
         if (bindingResult.hasErrors()) {
             throw new InvalidException();
         }
 
-        if (categoryRepository.findById(id).isEmpty()) {
-            throw new NotFoundException();
-        }
-
         category.setId(id);
-        return ResponseEntity.ok(categoryRepository.save(category));
+        return ResponseEntity.ok(categoryService.update(category));
     }
 }
 

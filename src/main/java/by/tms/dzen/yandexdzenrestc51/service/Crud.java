@@ -9,7 +9,7 @@ public interface Crud<T> {
 
     void delete(Long id);
 
-    void update(T t);
+    T update(T t);
 
     T findById(Long id);
 }

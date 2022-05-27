@@ -5,6 +5,7 @@ import by.tms.dzen.yandexdzenrestc51.entity.Role;
 import by.tms.dzen.yandexdzenrestc51.entity.Status;
 import by.tms.dzen.yandexdzenrestc51.entity.User;
 import by.tms.dzen.yandexdzenrestc51.exception.ExistsException;
+import by.tms.dzen.yandexdzenrestc51.exception.NotFoundException;
 import by.tms.dzen.yandexdzenrestc51.mapper.UserConverter;
 import by.tms.dzen.yandexdzenrestc51.repository.RoleRepository;
 import by.tms.dzen.yandexdzenrestc51.repository.UserRepository;
@@ -79,10 +80,12 @@ public class UserService implements Crud<User> {
     }
 
     @Override
-    public void update(User user) {
+    public User update(User user) {
+        userRepository.findById(user.getId()).orElseThrow(() -> new NotFoundException("User with id: " + user.getId() + " not found"));
         User updated = userRepository.save(user);
-
         log.info("IN updateUser - user: {} successfully updated", updated);
+
+        return updated;
     }
 
     @Override
