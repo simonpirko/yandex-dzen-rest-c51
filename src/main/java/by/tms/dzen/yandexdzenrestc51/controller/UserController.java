@@ -5,7 +5,7 @@ import by.tms.dzen.yandexdzenrestc51.exception.ExistsException;
 import by.tms.dzen.yandexdzenrestc51.exception.InvalidException;
 import by.tms.dzen.yandexdzenrestc51.exception.NotFoundException;
 import by.tms.dzen.yandexdzenrestc51.repository.UserRepository;
-import by.tms.dzen.yandexdzenrestc51.service.UserService;
+import by.tms.dzen.yandexdzenrestc51.service.Impl.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -97,7 +97,7 @@ public class UserController {
         }
         User update = userRepository.findByUsername(username).get();
         user.setId(update.getId());
-        userService.updateUser(user);
+        userService.update(user);
 
         return ResponseEntity.ok(update);
     }
@@ -117,6 +117,6 @@ public class UserController {
         }
 
         User user = userRepository.findByUsername(username).get();
-        userService.deleteUser(user);
+        userService.delete(user);
     }
 }

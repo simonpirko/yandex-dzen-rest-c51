@@ -8,6 +8,8 @@ import by.tms.dzen.yandexdzenrestc51.exception.NotFoundException;
 import by.tms.dzen.yandexdzenrestc51.mapper.PostMapper;
 import by.tms.dzen.yandexdzenrestc51.repository.*;
 import by.tms.dzen.yandexdzenrestc51.service.*;
+import by.tms.dzen.yandexdzenrestc51.service.Impl.CategoryService;
+import by.tms.dzen.yandexdzenrestc51.service.Impl.UserService;
 import by.tms.dzen.yandexdzenrestc51.validator.IdValidator;
 import by.tms.dzen.yandexdzenrestc51.validator.LikeValidator;
 import io.swagger.annotations.Api;
@@ -138,7 +140,7 @@ public class AdminController {
         }
         User update = userRepository.findByUsername(username).get();
         user.setId(update.getId());
-        userService.updateUser(user);
+        userService.update(user);
 
         return ResponseEntity.ok(update);
     }
@@ -159,7 +161,7 @@ public class AdminController {
         }
 
         User user = userRepository.findByUsername(username).get();
-        userService.deleteUser(user);
+        userService.delete(user);
     }
 
     @ApiResponses(value = {

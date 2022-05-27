@@ -4,8 +4,9 @@ import by.tms.dzen.yandexdzenrestc51.configuration.security.jwt.JWTTokenProvider
 import by.tms.dzen.yandexdzenrestc51.dto.AuthRequestDTO;
 import by.tms.dzen.yandexdzenrestc51.dto.UserDTO;
 import by.tms.dzen.yandexdzenrestc51.entity.User;
+import by.tms.dzen.yandexdzenrestc51.exception.ForbiddenException;
 import by.tms.dzen.yandexdzenrestc51.exception.InvalidException;
-import by.tms.dzen.yandexdzenrestc51.service.UserService;
+import by.tms.dzen.yandexdzenrestc51.service.Impl.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -28,7 +29,7 @@ import java.util.Map;
 
 @Slf4j
 @RestController
-@Api(tags = "Authentication", description = "Operations with authentification")
+@Api(tags = "Authentication", description = "Operations with authentication")
 @RequestMapping("/api/v1/auth")
 public class AuthenticationController {
     private final UserService service;
@@ -78,12 +79,7 @@ public class AuthenticationController {
             throw new InvalidException();
         }
 
-        if (service.existByUsername(userDTO.getUsername()) || service.existByEmail(userDTO.getEmail())) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
         service.registration(userDTO);
-
-        log.info("User named {} registered", userDTO.getUsername());
 
         return new ResponseEntity<>(userDTO, HttpStatus.CREATED);
     }
@@ -98,9 +94,11 @@ public class AuthenticationController {
             resp.put("username", auth.getName());
             resp.put("session, lastAccessedTime", session.getLastAccessedTime());
             new SecurityContextLogoutHandler().logout(request, response, auth);
-        }
 
-        log.info("The user with the name {} has left the program", auth.getName());
+            log.info("The user with the name {} has left the program", auth.getName());
+        } else {
+            throw new ForbiddenException("You are not authorized");
+        }
 
         return new ResponseEntity<>(resp, HttpStatus.OK);
     }
