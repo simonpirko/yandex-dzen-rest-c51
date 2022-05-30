@@ -1,7 +1,7 @@
 package by.tms.dzen.yandexdzenrestc51.configuration.security;
 
-import by.tms.dzen.yandexdzenrestc51.configuration.security.jwt.JWTConfig;
-import by.tms.dzen.yandexdzenrestc51.configuration.security.jwt.JWTTokenProvider;
+import by.tms.dzen.yandexdzenrestc51.configuration.security.jwt.JwtConfig;
+import by.tms.dzen.yandexdzenrestc51.configuration.security.jwt.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,7 +16,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 @Configuration
 @PropertySource("classpath:endpoint.properties")
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
-    private final JWTTokenProvider jwtTokenProvider;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Value("${ADMIN_ENDPOINT}")
     private String ADMIN_ENDPOINT;
@@ -34,7 +34,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private String ADMIN_ROLE_NAME;
 
 
-    public SecurityConfiguration(JWTTokenProvider jwtTokenProvider) {
+    public SecurityConfiguration(JwtTokenProvider jwtTokenProvider) {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
@@ -57,7 +57,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(DB_H2_ENDPOINT).permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .apply(new JWTConfig(jwtTokenProvider));
+                .apply(new JwtConfig(jwtTokenProvider));
         http
                 .headers().frameOptions().sameOrigin();
     }
