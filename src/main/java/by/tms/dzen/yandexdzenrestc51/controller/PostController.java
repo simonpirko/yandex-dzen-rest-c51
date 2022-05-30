@@ -48,7 +48,7 @@ public class PostController {
             " id will be received. for test data use any number instead of id", example = "1")
                                         @PathVariable("id") Long id) {
 
-        idValidator.validatePostID(id);
+        idValidator.validatePostId(id);
 
         return ResponseEntity.ok(postService.findById(id));
     }
@@ -64,7 +64,7 @@ public class PostController {
             "of this user", example = "1")
                                                          @PathVariable("userId") Long userId) {
 
-        idValidator.validateUserID(userId);
+        idValidator.validateUserId(userId);
 
         return ResponseEntity.ok(postService.findAllByUserId(userId));
     }
@@ -84,7 +84,7 @@ public class PostController {
             throw new InvalidException();
         }
 
-        idValidator.validateUserID(userId);
+        idValidator.validateUserId(userId);
 
         Post post = postMapper.postDTOToPost(postDto);
         post.setUser(userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User not found")));
@@ -103,7 +103,7 @@ public class PostController {
             "be deleted. for test data use any number instead of id", example = "1")
                            @PathVariable("id") Long id) {
 
-        idValidator.validatePostID(id);
+        idValidator.validatePostId(id);
         postService.delete(id);
     }
 
@@ -123,7 +123,7 @@ public class PostController {
             throw new InvalidException();
         }
 
-        idValidator.validatePostID(id);
+        idValidator.validatePostId(id);
         post.setId(id);
 
         return ResponseEntity.ok(postService.save(post));
