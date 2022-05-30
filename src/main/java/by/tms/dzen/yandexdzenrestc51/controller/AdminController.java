@@ -24,6 +24,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -44,11 +45,18 @@ public class AdminController {
     private final CategoryService categoryService;
     private final TagService tagService;
 
-    public AdminController(UserService userService, UserRepository userRepository, PostRepository postRepository,
-                           IdValidator idValidator, PostMapper postMapper, PostService postService,
+    public AdminController(UserService userService,
+                           UserRepository userRepository,
+                           PostRepository postRepository,
+                           IdValidator idValidator,
+                           PostMapper postMapper,
+                           PostService postService,
                            CommentRepository commentRepository,
-                           CommentService commentService, CategoryRepository categoryRepository,
-                           TagRepository tagRepository, CategoryService categoryService, TagService tagService) {
+                           CommentService commentService,
+                           CategoryRepository categoryRepository,
+                           TagRepository tagRepository,
+                           CategoryService categoryService,
+                           TagService tagService) {
         this.userService = userService;
         this.userRepository = userRepository;
         this.postRepository = postRepository;
@@ -519,7 +527,7 @@ public class AdminController {
                           @PathVariable("id") Long id) {
 
         idValidator.validateTagId(id);
-        tagService.delete(id);
+        tagService.deleteById(id);
         if (tagRepository.findById(id).isEmpty()) {
             throw new NotFoundException();
         }
