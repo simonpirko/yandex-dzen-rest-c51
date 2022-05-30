@@ -61,12 +61,12 @@ public class LikeController {
     }
 
     private void validate(long id, long userId, long postId) {
-        idValidator.validateID(id);
+        idValidator.validateId(id);
         validate(userId, postId);
     }
 
     private void validate(long userId, long postId) {
-        idValidator.validateUserID(userId);
-        idValidator.validatePostID(postId);
+        idValidator.validateUserId(userId);
+        idValidator.validatePostId(postId);
     }
 }

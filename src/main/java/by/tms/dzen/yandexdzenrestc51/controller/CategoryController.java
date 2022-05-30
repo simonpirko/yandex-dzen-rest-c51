@@ -1,9 +1,7 @@
 package by.tms.dzen.yandexdzenrestc51.controller;
 
 import by.tms.dzen.yandexdzenrestc51.entity.Category;
-import by.tms.dzen.yandexdzenrestc51.exception.ExistsException;
 import by.tms.dzen.yandexdzenrestc51.exception.InvalidException;
-import by.tms.dzen.yandexdzenrestc51.exception.NotFoundException;
 import by.tms.dzen.yandexdzenrestc51.repository.CategoryRepository;
 import by.tms.dzen.yandexdzenrestc51.service.Impl.CategoryService;
 import by.tms.dzen.yandexdzenrestc51.validator.IdValidator;
@@ -13,7 +11,6 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.Authorization;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -74,7 +71,7 @@ public class CategoryController {
     public ResponseEntity<Category> getById(@ApiParam(value = "Get category by ID", example = "1")
                                             @PathVariable("id") Long id) {
 
-        idValidator.validateID(id);
+        idValidator.validateId(id);
         return ResponseEntity.ok(categoryService.findById(id));
     }
 
@@ -88,7 +85,7 @@ public class CategoryController {
     public void delete(@ApiParam(value = "Delete category by ID", example = "1")
                        @PathVariable("id") Long id) {
 
-        idValidator.validateID(id);
+        idValidator.validateId(id);
         categoryService.delete(id);
     }
 
@@ -104,7 +101,7 @@ public class CategoryController {
                                            @Valid @RequestBody Category category,
                                            BindingResult bindingResult) {
 
-        idValidator.validateID(id);
+        idValidator.validateId(id);
 
         if (bindingResult.hasErrors()) {
             throw new InvalidException();

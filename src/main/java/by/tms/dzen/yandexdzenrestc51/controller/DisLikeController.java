@@ -39,10 +39,10 @@ public class DisLikeController {
                                         @ApiParam(value = "Add dislike for the post", example = "1")
                                         @PathVariable("postId") Long postId) {
 
-        idValidator.validateID(userId);
-        idValidator.validateID(postId);
-        idValidator.validateUserID(userId);
-        idValidator.validatePostID(postId);
+        idValidator.validateId(userId);
+        idValidator.validateId(postId);
+        idValidator.validateUserId(userId);
+        idValidator.validatePostId(postId);
 
         return ResponseEntity.ok(disLikeService.addDisLike(userId, postId));
     }
@@ -60,10 +60,10 @@ public class DisLikeController {
                        @ApiParam(value = "Remove the dislike from the post", example = "1")
                        @PathVariable("postId") Long postId) {
 
-        idValidator.validateID(userId);
-        idValidator.validateID(postId);
-        idValidator.validateUserID(userId);
-        idValidator.validatePostID(postId);
+        idValidator.validateId(userId);
+        idValidator.validateId(postId);
+        idValidator.validateUserId(userId);
+        idValidator.validatePostId(postId);
 
         disLikeService.removeDisLike(userId, postId);
     }

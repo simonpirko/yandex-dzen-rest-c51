@@ -24,7 +24,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -39,7 +38,7 @@ public class AdminController {
     private final PostMapper postMapper;
     private final PostService postService;
     private final CommentRepository commentRepository;
-     private final CommentService commentService;
+    private final CommentService commentService;
     private final CategoryRepository categoryRepository;
     private final TagRepository tagRepository;
     private final CategoryService categoryService;
@@ -175,13 +174,9 @@ public class AdminController {
             " id will be received. for test data use any number instead of id", example = "1")
                                         @PathVariable("id") Long id) {
 
-        idValidator.validateID(id);
-
-        if (postRepository.findById(id).isEmpty()) {
-            throw new NotFoundException();
-        }
-
+        idValidator.validatePostId(id);
         Post getPost = postRepository.findById(id).get();
+
         return ResponseEntity.ok(getPost);
     }
 
@@ -196,11 +191,7 @@ public class AdminController {
             "of this user", example = "1")
                                                          @PathVariable("userId") Long userId) {
 
-        idValidator.validateID(userId);
-
-        if (userRepository.findById(userId).isEmpty()) {
-            throw new NotFoundException();
-        }
+        idValidator.validateUserId(userId);
 
         return ResponseEntity.ok(postRepository.findAllByUserId(userId).get());
     }
@@ -217,15 +208,11 @@ public class AdminController {
                                         @PathVariable("userId") Long userId,
                                         @Valid @RequestBody PostDTO postDto, BindingResult bindingResult) {
 
-        idValidator.validateID(userId);
-
         if (bindingResult.hasErrors()) {
             throw new InvalidException();
         }
 
-        if (userRepository.findById(userId).isEmpty()) {
-            throw new NotFoundException();
-        }
+        idValidator.validateUserId(userId);
 
         Post post = postMapper.postDTOToPost(postDto);
         post.setUser(userRepository.findById(userId).get());
@@ -245,13 +232,14 @@ public class AdminController {
             authorizations = {@Authorization(value = "apiKey")})
     @PutMapping(value = "/post/{id}", produces = "application/json")
     public ResponseEntity<Post> updatePost(@ApiParam(value = "Post id is required to change", example = "1")
-                                           @PathVariable("id") Long id, @RequestBody Post post) {
+                                           @PathVariable("id") Long id, @Valid @RequestBody Post post,
+                                           BindingResult bindingResult) {
 
-        idValidator.validateID(id);
-
-        if (postRepository.findById(id).isEmpty()) {
-            throw new NotFoundException();
+        if (bindingResult.hasErrors()) {
+            throw new InvalidException();
         }
+
+        idValidator.validatePostId(id);
 
         post.setId(id);
         Post save = postRepository.save(post);
@@ -271,12 +259,7 @@ public class AdminController {
             "be deleted. for test data use any number instead of id", example = "1")
                            @PathVariable("id") Long id) {
 
-        idValidator.validateID(id);
-
-        if (postRepository.findById(id).isEmpty()) {
-            throw new NotFoundException();
-        }
-
+        idValidator.validatePostId(id);
         postService.delete(id);
     }
 
@@ -294,11 +277,11 @@ public class AdminController {
                                               @ApiParam(value = "Id is required to receive a comment on this id", example = "1")
                                               @PathVariable("id") Long id) {
 
-        idValidator.validateID(id);
-        idValidator.validateID(userId);
-        idValidator.validateID(postId);
-        idValidator.validateUserID(userId);
-        idValidator.validatePostID(postId);
+        idValidator.validateId(id);
+        idValidator.validateId(userId);
+        idValidator.validateId(postId);
+        idValidator.validateUserId(userId);
+        idValidator.validatePostId(postId);
 
         if (commentRepository.findById(id).isEmpty()) {
             throw new NotFoundException();
@@ -317,7 +300,7 @@ public class AdminController {
     public ResponseEntity<List<Comment>> getAllCommentByPost(@ApiParam(value = "Post id is required to get all comments on this post", example = "1")
                                                              @PathVariable("postId") Long postId) {
 
-        idValidator.validateID(postId);
+        idValidator.validateId(postId);
 
         if (postRepository.findById(postId).isEmpty()) {
             throw new NotFoundException();
@@ -341,10 +324,10 @@ public class AdminController {
                                               @Valid @RequestBody Comment comment,
                                               BindingResult bindingResult) {
 
-        idValidator.validateID(userId);
-        idValidator.validateID(postId);
-        idValidator.validateUserID(userId);
-        idValidator.validatePostID(postId);
+        idValidator.validateId(userId);
+        idValidator.validateId(postId);
+        idValidator.validateUserId(userId);
+        idValidator.validatePostId(postId);
 
         if (bindingResult.hasErrors()) {
             throw new InvalidException();
@@ -375,11 +358,11 @@ public class AdminController {
                                                  @ApiParam(value = "Creating a modified comment object", example = "Comment")
                                                  @RequestBody Comment comment) {
 
-        idValidator.validateID(id);
-        idValidator.validateID(userId);
-        idValidator.validateID(postId);
-        idValidator.validateUserID(userId);
-        idValidator.validatePostID(postId);
+        idValidator.validateId(id);
+        idValidator.validateId(userId);
+        idValidator.validateId(postId);
+        idValidator.validateUserId(userId);
+        idValidator.validatePostId(postId);
 
         if (commentRepository.findById(id).isEmpty()) {
             throw new NotFoundException();
@@ -405,15 +388,8 @@ public class AdminController {
                               @ApiParam(value = "Id is required to receive a comment on this id", example = "1")
                               @PathVariable("id") Long id) {
 
-        idValidator.validateID(userId);
-        idValidator.validateID(postId);
-        idValidator.validateUserID(userId);
-        idValidator.validatePostID(postId);
 
-        if (id < 0 | commentRepository.findById(id).isEmpty()) {
-            throw new NotFoundException();
-        }
-
+        validate(id, userId, postId, id);
         commentService.delete(id);
     }
 
@@ -428,11 +404,7 @@ public class AdminController {
     public ResponseEntity<Category> getCategory(@ApiParam(value = "Get category by ID", example = "1")
                                                 @PathVariable("id") Long id) {
 
-        idValidator.validateID(id);
-
-        if (categoryRepository.findById(id).isEmpty()) {
-            throw new NotFoundException();
-        }
+        idValidator.validateCategoryId(id);
 
         return ResponseEntity.ok(categoryRepository.findById(id).get());
     }
@@ -490,9 +462,7 @@ public class AdminController {
             throw new InvalidException();
         }
 
-        if (categoryRepository.findById(id).isEmpty()) {
-            throw new NotFoundException();
-        }
+        idValidator.validateCategoryId(id);
 
         category.setId(id);
         return ResponseEntity.ok(categoryRepository.save(category));
@@ -509,12 +479,7 @@ public class AdminController {
     public void deleteCategory(@ApiParam(value = "Delete category by ID", example = "1")
                                @PathVariable("id") Long id) {
 
-        idValidator.validateID(id);
-
-        if (categoryRepository.findById(id).isEmpty()) {
-            throw new NotFoundException();
-        }
-
+        idValidator.validateCategoryId(id);
         categoryService.delete(id);
     }
 
@@ -542,19 +507,19 @@ public class AdminController {
         return ResponseEntity.ok(saveTag);
     }
 
-
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successful operation"),
             @ApiResponse(responseCode = "403", description = "Forbidden"),
             @ApiResponse(responseCode = "404", description = "Tag not found")
     })
-    @ApiOperation(value = "Remove tag by id", notes = "This can only be done by the logged in user",
+    @ApiOperation(value = "Delete tag", notes = "This can only be done by the logged in user",
             authorizations = {@Authorization(value = "apiKey")})
     @DeleteMapping(value = "/tag/{id}", produces = "application/json")
-    public void deleteTagById(@ApiParam(value = "Tag removal", example = "1")
+    public void deleteTag(@ApiParam(value = "tag removal", example = "1")
                           @PathVariable("id") Long id) {
-        idValidator.validateID(id);
 
+        idValidator.validateTagId(id);
+        tagService.delete(id);
         if (tagRepository.findById(id).isEmpty()) {
             throw new NotFoundException();
         }
@@ -579,5 +544,20 @@ public class AdminController {
         }
 
         tagService.deleteByName(name);
+    }
+
+    private void validate(long userId, long postId) {
+        idValidator.validateUserId(userId);
+        idValidator.validatePostId(postId);
+    }
+
+    private void validate(long id, long userId, long postId) {
+        idValidator.validateId(id);
+        validate(userId, postId);
+    }
+
+    private void validate(long id, long userId, long postId, long commendId) {
+        validate(id, userId, postId);
+        idValidator.validateCommentId(commendId);
     }
 }

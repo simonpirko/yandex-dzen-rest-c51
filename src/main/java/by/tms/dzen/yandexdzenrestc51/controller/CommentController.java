@@ -89,7 +89,7 @@ public class CommentController {
     public ResponseEntity<List<Comment>> getAllCommentByPost(@ApiParam(value = "Post id is required to get all comments on this post", example = "1")
                                                              @PathVariable("postId") Long postId) {
 
-        idValidator.validateID(postId);
+        idValidator.validateId(postId);
         return ResponseEntity.ok(commentService.findAllByPostId(postId));
     }
 
@@ -134,12 +134,12 @@ public class CommentController {
     }
 
     private void validate(long id, long userId, long postId) {
-        idValidator.validateID(id);
+        idValidator.validateId(id);
         validate(userId, postId);
     }
 
     private void validate(long userId, long postId) {
-        idValidator.validateUserID(userId);
-        idValidator.validatePostID(postId);
+        idValidator.validateUserId(userId);
+        idValidator.validatePostId(postId);
     }
 }
