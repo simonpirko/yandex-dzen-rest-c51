@@ -6,7 +6,7 @@ import by.tms.dzen.yandexdzenrestc51.exception.InvalidException;
 import by.tms.dzen.yandexdzenrestc51.exception.NotFoundException;
 import by.tms.dzen.yandexdzenrestc51.repository.CommentRepository;
 import by.tms.dzen.yandexdzenrestc51.repository.PostRepository;
-import by.tms.dzen.yandexdzenrestc51.service.CommentService;
+import by.tms.dzen.yandexdzenrestc51.service.Impl.CommentService;
 import by.tms.dzen.yandexdzenrestc51.validator.IdValidator;
 import by.tms.dzen.yandexdzenrestc51.validator.LikeValidator;
 import io.swagger.annotations.Api;
