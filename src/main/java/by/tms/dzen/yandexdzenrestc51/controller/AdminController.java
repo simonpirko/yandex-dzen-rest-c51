@@ -13,7 +13,6 @@ import by.tms.dzen.yandexdzenrestc51.service.Impl.UserService;
 import by.tms.dzen.yandexdzenrestc51.service.PostService;
 import by.tms.dzen.yandexdzenrestc51.service.TagService;
 import by.tms.dzen.yandexdzenrestc51.validator.IdValidator;
-import by.tms.dzen.yandexdzenrestc51.validator.LikeValidator;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -39,8 +38,7 @@ public class AdminController {
     private final PostMapper postMapper;
     private final PostService postService;
     private final CommentRepository commentRepository;
-    private final LikeValidator likeValidator;
-    private final CommentService commentService;
+     private final CommentService commentService;
     private final CategoryRepository categoryRepository;
     private final TagRepository tagRepository;
     private final CategoryService categoryService;
@@ -48,7 +46,7 @@ public class AdminController {
 
     public AdminController(UserService userService, UserRepository userRepository, PostRepository postRepository,
                            IdValidator idValidator, PostMapper postMapper, PostService postService,
-                           CommentRepository commentRepository, LikeValidator likeValidator,
+                           CommentRepository commentRepository,
                            CommentService commentService, CategoryRepository categoryRepository,
                            TagRepository tagRepository, CategoryService categoryService, TagService tagService) {
         this.userService = userService;
@@ -58,7 +56,6 @@ public class AdminController {
         this.postMapper = postMapper;
         this.postService = postService;
         this.commentRepository = commentRepository;
-        this.likeValidator = likeValidator;
         this.commentService = commentService;
         this.categoryRepository = categoryRepository;
         this.tagRepository = tagRepository;
@@ -296,9 +293,11 @@ public class AdminController {
                                               @ApiParam(value = "Id is required to receive a comment on this id", example = "1")
                                               @PathVariable("id") Long id) {
 
-        likeValidator.validateID(userId, postId);
-        likeValidator.existsByUserIdAndPostId(userId, postId);
         idValidator.validateID(id);
+        idValidator.validateID(userId);
+        idValidator.validateID(postId);
+        idValidator.validateUserID(userId);
+        idValidator.validatePostID(postId);
 
         if (commentRepository.findById(id).isEmpty()) {
             throw new NotFoundException();
@@ -341,8 +340,10 @@ public class AdminController {
                                               @Valid @RequestBody Comment comment,
                                               BindingResult bindingResult) {
 
-        likeValidator.validateID(userId, postId);
-        likeValidator.existsByUserIdAndPostId(userId, postId);
+        idValidator.validateID(userId);
+        idValidator.validateID(postId);
+        idValidator.validateUserID(userId);
+        idValidator.validatePostID(postId);
 
         if (bindingResult.hasErrors()) {
             throw new InvalidException();
@@ -373,9 +374,11 @@ public class AdminController {
                                                  @ApiParam(value = "Creating a modified comment object", example = "Comment")
                                                  @RequestBody Comment comment) {
 
-        likeValidator.validateID(userId, postId);
-        likeValidator.existsByUserIdAndPostId(userId, postId);
         idValidator.validateID(id);
+        idValidator.validateID(userId);
+        idValidator.validateID(postId);
+        idValidator.validateUserID(userId);
+        idValidator.validatePostID(postId);
 
         if (commentRepository.findById(id).isEmpty()) {
             throw new NotFoundException();
@@ -401,8 +404,10 @@ public class AdminController {
                               @ApiParam(value = "Id is required to receive a comment on this id", example = "1")
                               @PathVariable("id") Long id) {
 
-        likeValidator.validateID(userId, postId);
-        likeValidator.existsByUserIdAndPostId(userId, postId);
+        idValidator.validateID(userId);
+        idValidator.validateID(postId);
+        idValidator.validateUserID(userId);
+        idValidator.validatePostID(postId);
 
         if (id < 0 | commentRepository.findById(id).isEmpty()) {
             throw new NotFoundException();

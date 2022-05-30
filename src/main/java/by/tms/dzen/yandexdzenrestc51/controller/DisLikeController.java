@@ -1,15 +1,15 @@
 package by.tms.dzen.yandexdzenrestc51.controller;
 
 import by.tms.dzen.yandexdzenrestc51.entity.DisLike;
-import by.tms.dzen.yandexdzenrestc51.exception.NotFoundException;
 import by.tms.dzen.yandexdzenrestc51.service.DisLikeService;
-import by.tms.dzen.yandexdzenrestc51.validator.LikeValidator;
+import by.tms.dzen.yandexdzenrestc51.validator.IdValidator;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.Authorization;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,11 +17,11 @@ import org.springframework.web.bind.annotation.*;
 @Api(tags = "DisLike", description = "Operations with DisLike")
 @RequestMapping("/api/v1/dislike")
 public class DisLikeController {
-    private final LikeValidator likeValidator;
+    @Autowired
+    private IdValidator idValidator;
     private final DisLikeService disLikeService;
 
-    public DisLikeController(LikeValidator likeValidator, DisLikeService disLikeService) {
-        this.likeValidator = likeValidator;
+    public DisLikeController(DisLikeService disLikeService) {
         this.disLikeService = disLikeService;
     }
 
@@ -39,8 +39,11 @@ public class DisLikeController {
                                         @ApiParam(value = "Add dislike for the post", example = "1")
                                         @PathVariable("postId") Long postId) {
 
-        likeValidator.validateID(userId, postId);
-        likeValidator.existsByUserIdAndPostId(userId, postId);
+        idValidator.validateID(userId);
+        idValidator.validateID(postId);
+        idValidator.validateUserID(userId);
+        idValidator.validatePostID(postId);
+
         return ResponseEntity.ok(disLikeService.addDisLike(userId, postId));
     }
 
@@ -57,12 +60,11 @@ public class DisLikeController {
                        @ApiParam(value = "Remove the dislike from the post", example = "1")
                        @PathVariable("postId") Long postId) {
 
-        likeValidator.validateID(userId, postId);
+        idValidator.validateID(userId);
+        idValidator.validateID(postId);
+        idValidator.validateUserID(userId);
+        idValidator.validatePostID(postId);
 
-        if (likeValidator.existsByUserIdAndPostId(userId, postId)) {
-            disLikeService.removeDisLike(userId, postId);
-        } else {
-            throw new NotFoundException();
-        }
+        disLikeService.removeDisLike(userId, postId);
     }
 }

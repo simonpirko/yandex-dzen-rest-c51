@@ -2,14 +2,21 @@ package by.tms.dzen.yandexdzenrestc51.service.Impl;
 
 import by.tms.dzen.yandexdzenrestc51.entity.Comment;
 import by.tms.dzen.yandexdzenrestc51.entity.Status;
+import by.tms.dzen.yandexdzenrestc51.exception.NotFoundException;
 import by.tms.dzen.yandexdzenrestc51.repository.CommentRepository;
+import by.tms.dzen.yandexdzenrestc51.repository.PostRepository;
 import by.tms.dzen.yandexdzenrestc51.service.Crud;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Slf4j
 @Component
 public class CommentService implements Crud<Comment> {
+    @Autowired
+    private PostRepository postRepository;
     private final CommentRepository commentRepository;
 
     public CommentService(CommentRepository commentRepository) {
@@ -36,7 +43,11 @@ public class CommentService implements Crud<Comment> {
 
     @Override
     public Comment findById(Long id) {
-        return null;
+        return commentRepository.findById(id).orElseThrow(() -> new NotFoundException("Comment with id: " + id + " not found"));
+    }
+
+    public List<Comment> findAllByPostId(long postId) {
+        return commentRepository.findAllByPostId(postId).orElseThrow(() -> new NotFoundException("Comments with postId: " + postId + " not found"));
     }
 
     @Override
