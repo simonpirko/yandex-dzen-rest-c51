@@ -38,7 +38,7 @@ public class AdminController {
     private final PostMapper postMapper;
     private final PostService postService;
     private final CommentRepository commentRepository;
-     private final CommentService commentService;
+    private final CommentService commentService;
     private final CategoryRepository categoryRepository;
     private final TagRepository tagRepository;
     private final CategoryService categoryService;
@@ -507,7 +507,6 @@ public class AdminController {
         return ResponseEntity.ok(saveTag);
     }
 
-
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successful operation"),
             @ApiResponse(responseCode = "403", description = "Forbidden"),
@@ -527,6 +526,7 @@ public class AdminController {
         idValidator.validateUserId(userId);
         idValidator.validatePostId(postId);
     }
+
     private void validate(long id, long userId, long postId) {
         idValidator.validateId(id);
         validate(userId, postId);

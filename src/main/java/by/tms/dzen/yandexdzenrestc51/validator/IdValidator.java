@@ -8,12 +8,16 @@ import org.springframework.stereotype.Component;
 @Component
 public class IdValidator {
     private final TagRepository tagRepository;
-        private final CategoryRepository categoryRepository;
+    private final CategoryRepository categoryRepository;
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
     private final PostRepository postRepository;
 
-    public IdValidator(UserRepository userRepository, PostRepository postRepository, CommentRepository commentRepository, CategoryRepository categoryRepository, TagRepository tagRepository) {
+    public IdValidator(UserRepository userRepository,
+                       PostRepository postRepository,
+                       CommentRepository commentRepository,
+                       CategoryRepository categoryRepository,
+                       TagRepository tagRepository) {
         this.userRepository = userRepository;
         this.postRepository = postRepository;
         this.commentRepository = commentRepository;
