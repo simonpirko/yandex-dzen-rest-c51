@@ -73,6 +73,6 @@ public class TagController {
             throw new NotFoundException();
         }
 
-        tagService.delete(tag.getId());
+        tagService.deleteById(tag.getId());
     }
 }
