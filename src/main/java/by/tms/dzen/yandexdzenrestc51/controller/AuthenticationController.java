@@ -50,7 +50,7 @@ public class AuthenticationController {
             @ApiResponse(responseCode = "200", description = "Successful operation"),
             @ApiResponse(responseCode = "405", description = "Invalid input")
     })
-    @ApiOperation(value = "User authorization", notes = "Authorization by login and password")
+    @ApiOperation(value = "User authorization")
     @PostMapping(value = "/login")
     public ResponseEntity<Map<Object, Object>> login(@ApiParam(value = "Authorization object", example = "requestDto")
                                                      @Valid @RequestBody AuthRequestDTO requestDto,
@@ -85,7 +85,7 @@ public class AuthenticationController {
             @ApiResponse(responseCode = "201", description = "Created"),
             @ApiResponse(responseCode = "405", description = "Invalid input")
     })
-    @ApiOperation(value = "User registration", notes = "New user registration")
+    @ApiOperation(value = "User registration")
     @PostMapping(value = "/reg")
     public ResponseEntity<UserDTO> registration(@ApiParam(value = "Create a new user object", example = "userDTO")
                                                 @Valid @RequestBody UserDTO userDTO,
