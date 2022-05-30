@@ -24,6 +24,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -547,10 +548,10 @@ public class AdminController {
             @ApiResponse(responseCode = "403", description = "Forbidden"),
             @ApiResponse(responseCode = "404", description = "Tag not found")
     })
-    @ApiOperation(value = "Delete tag", notes = "This can only be done by the logged in user",
+    @ApiOperation(value = "Remove tag by id", notes = "This can only be done by the logged in user",
             authorizations = {@Authorization(value = "apiKey")})
     @DeleteMapping(value = "/tag/{id}", produces = "application/json")
-    public void deleteTag(@ApiParam(value = "tag removal", example = "1")
+    public void deleteTagById(@ApiParam(value = "Tag removal", example = "1")
                           @PathVariable("id") Long id) {
         idValidator.validateID(id);
 
@@ -558,8 +559,25 @@ public class AdminController {
             throw new NotFoundException();
         }
 
-        tagService.delete(id);
+        tagService.deleteById(id);
     }
 
 
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful operation"),
+            @ApiResponse(responseCode = "403", description = "Forbidden"),
+            @ApiResponse(responseCode = "404", description = "Tag not found")
+    })
+    @ApiOperation(value = "Remove tag by name", notes = "This can only be done by the logged in user",
+            authorizations = {@Authorization(value = "apiKey")})
+    @DeleteMapping(value = "/tag/{name}", produces = "application/json")
+    public void deleteTagByName(@ApiParam(value = "Tag removal", example = "name")
+                                    @PathVariable("name") @NotBlank String name) {
+
+        if (tagRepository.findByName(name).isEmpty()) {
+            throw new NotFoundException();
+        }
+
+        tagService.deleteByName(name);
+    }
 }

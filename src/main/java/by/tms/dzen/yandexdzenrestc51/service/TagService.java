@@ -15,11 +15,19 @@ public class TagService {
         this.tagRepository = tagRepository;
     }
 
-    public void delete(Long id) {
+    public void deleteById(Long id) {
         Tag byId = tagRepository.getById(id);
         byId.setStatus(Status.DELETED);
         tagRepository.save(byId);
 
         log.info("IN delete - tag: {} successfully deleted", byId);
+    }
+
+    public void deleteByName(String name) {
+        Tag byName = tagRepository.findByName(name).get();
+        byName.setStatus(Status.DELETED);
+        tagRepository.save(byName);
+
+        log.info("IN delete - tag: {} successfully deleted", byName);
     }
 }
