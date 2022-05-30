@@ -9,6 +9,10 @@ import by.tms.dzen.yandexdzenrestc51.exception.InvalidException;
 import by.tms.dzen.yandexdzenrestc51.service.Impl.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.Authorization;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,9 +46,14 @@ public class AuthenticationController {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
-    @PostMapping("/login")
-    @ApiOperation(value = "Login user", notes = "Authorization by login and password")
-    public ResponseEntity<Map<Object, Object>> login(@Valid @RequestBody AuthRequestDTO requestDto,
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful operation"),
+            @ApiResponse(responseCode = "405", description = "Invalid input")
+    })
+    @ApiOperation(value = "User authorization")
+    @PostMapping(value = "/login")
+    public ResponseEntity<Map<Object, Object>> login(@ApiParam(value = "Authorization object", example = "requestDto")
+                                                     @Valid @RequestBody AuthRequestDTO requestDto,
                                                      BindingResult result) {
 
         if (result.hasErrors()) {
@@ -71,9 +80,15 @@ public class AuthenticationController {
         return new ResponseEntity<>(resp, HttpStatus.OK);
     }
 
-    @PostMapping("/reg")
-    @ApiOperation(value = "Registration user", notes = "New user registration")
-    public ResponseEntity<UserDTO> registration(@Valid @RequestBody UserDTO userDTO,
+
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Created"),
+            @ApiResponse(responseCode = "405", description = "Invalid input")
+    })
+    @ApiOperation(value = "User registration")
+    @PostMapping(value = "/reg")
+    public ResponseEntity<UserDTO> registration(@ApiParam(value = "Create a new user object", example = "userDTO")
+                                                @Valid @RequestBody UserDTO userDTO,
                                                 BindingResult result) {
         if (result.hasErrors()) {
             throw new InvalidException();
@@ -84,8 +99,13 @@ public class AuthenticationController {
         return new ResponseEntity<>(userDTO, HttpStatus.CREATED);
     }
 
-    @GetMapping("/logout")
-    @ApiOperation(value = "Logout user", notes = "Ending a user session")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful operation"),
+            @ApiResponse(responseCode = "403", description = "Forbidden")
+    })
+    @ApiOperation(value = "Logout user", notes = "This can only be done by the logged in user",
+            authorizations = {@Authorization(value = "apiKey")})
+    @GetMapping(value = "/logout")
     public ResponseEntity<Map<Object, Object>> logOut(HttpSession session, HttpServletRequest request, HttpServletResponse response) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Map<Object, Object> resp = new HashMap<>();
