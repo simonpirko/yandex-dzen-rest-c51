@@ -1,6 +1,6 @@
 package by.tms.dzen.yandexdzenrestc51.controller;
 
-import by.tms.dzen.yandexdzenrestc51.configuration.security.jwt.JWTTokenProvider;
+import by.tms.dzen.yandexdzenrestc51.configuration.security.jwt.JwtTokenProvider;
 import by.tms.dzen.yandexdzenrestc51.dto.AuthRequestDTO;
 import by.tms.dzen.yandexdzenrestc51.dto.UserDTO;
 import by.tms.dzen.yandexdzenrestc51.entity.User;
@@ -34,9 +34,9 @@ import java.util.Map;
 public class AuthenticationController {
     private final UserService service;
     private final AuthenticationManager authenticationManager;
-    private final JWTTokenProvider jwtTokenProvider;
+    private final JwtTokenProvider jwtTokenProvider;
 
-    public AuthenticationController(UserService service, AuthenticationManager authenticationManager, JWTTokenProvider jwtTokenProvider) {
+    public AuthenticationController(UserService service, AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider) {
         this.service = service;
         this.authenticationManager = authenticationManager;
         this.jwtTokenProvider = jwtTokenProvider;

@@ -10,9 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class GenerateJWTUser {
-    public static JWTUser create(User user){
-        return new JWTUser(
+public class GenerateJwtUser {
+    public static JwtUser create(User user){
+        return new JwtUser(
                 user.getId(),
                 user.getUsername(),
                 user.getPassword(),

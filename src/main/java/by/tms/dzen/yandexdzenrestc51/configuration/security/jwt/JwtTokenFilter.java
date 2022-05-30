@@ -13,8 +13,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 @RequiredArgsConstructor
-public class JWTTokenFilter extends GenericFilterBean {
-    private final JWTTokenProvider jwtTokenProvider;
+public class JwtTokenFilter extends GenericFilterBean {
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {

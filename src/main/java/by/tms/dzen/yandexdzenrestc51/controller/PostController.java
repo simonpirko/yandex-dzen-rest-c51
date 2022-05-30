@@ -5,9 +5,8 @@ import by.tms.dzen.yandexdzenrestc51.entity.Post;
 import by.tms.dzen.yandexdzenrestc51.exception.InvalidException;
 import by.tms.dzen.yandexdzenrestc51.exception.NotFoundException;
 import by.tms.dzen.yandexdzenrestc51.mapper.PostMapper;
-import by.tms.dzen.yandexdzenrestc51.repository.PostRepository;
 import by.tms.dzen.yandexdzenrestc51.repository.UserRepository;
-import by.tms.dzen.yandexdzenrestc51.service.PostService;
+import by.tms.dzen.yandexdzenrestc51.service.Impl.PostService;
 import by.tms.dzen.yandexdzenrestc51.validator.IdValidator;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -20,7 +19,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -29,12 +27,10 @@ import java.util.List;
 public class PostController {
     private final PostService postService;
     private final IdValidator idValidator;
-    private final PostRepository postRepository;
     private final UserRepository userRepository;
     private final PostMapper postMapper;
 
-    public PostController(PostRepository postRepository, UserRepository userRepository, PostMapper postMapper, IdValidator idValidator, PostService postService) {
-        this.postRepository = postRepository;
+    public PostController(UserRepository userRepository, PostMapper postMapper, IdValidator idValidator, PostService postService) {
         this.userRepository = userRepository;
         this.postMapper = postMapper;
         this.idValidator = idValidator;
@@ -52,14 +48,9 @@ public class PostController {
             " id will be received. for test data use any number instead of id", example = "1")
                                         @PathVariable("id") Long id) {
 
-        idValidator.validateID(id);
+        idValidator.validatePostID(id);
 
-        if (postRepository.findById(id).isEmpty()) {
-            throw new NotFoundException();
-        }
-
-        Post getPost = postRepository.findById(id).get();
-        return ResponseEntity.ok(getPost);
+        return ResponseEntity.ok(postService.findById(id));
     }
 
     @ApiResponses(value = {
@@ -73,14 +64,9 @@ public class PostController {
             "of this user", example = "1")
                                                          @PathVariable("userId") Long userId) {
 
-        idValidator.validateID(userId);
+        idValidator.validateUserID(userId);
 
-        if (userRepository.findById(userId).isEmpty()) {
-            throw new NotFoundException();
-        }
-
-        List<Post> postLis = postRepository.findAllByUserId(userId).get();
-        return ResponseEntity.ok(postLis);
+        return ResponseEntity.ok(postService.findAllByUserId(userId));
     }
 
     @ApiResponses(value = {
@@ -94,21 +80,16 @@ public class PostController {
                                            @PathVariable("userId") Long userId,
                                            @Valid @RequestBody PostDTO postDto, BindingResult bindingResult) {
 
-        idValidator.validateID(userId);
-
         if (bindingResult.hasErrors()) {
             throw new InvalidException();
         }
 
-        if (userRepository.findById(userId).isEmpty()) {
-            throw new NotFoundException();
-        }
+        idValidator.validateUserID(userId);
 
         Post post = postMapper.postDTOToPost(postDto);
-        post.setUser(userRepository.findById(userId).get());
-        post.setCreateDate(LocalDateTime.now());
-        Post save = postRepository.save(post);
-        return ResponseEntity.ok(save);
+        post.setUser(userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User not found")));
+
+        return ResponseEntity.ok(postService.save(post));
     }
 
     @ApiResponses(value = {
@@ -122,12 +103,7 @@ public class PostController {
             "be deleted. for test data use any number instead of id", example = "1")
                            @PathVariable("id") Long id) {
 
-        idValidator.validateID(id);
-
-        if (postRepository.findById(id).isEmpty()) {
-            throw new NotFoundException();
-        }
-
+        idValidator.validatePostID(id);
         postService.delete(id);
     }
 
@@ -140,16 +116,16 @@ public class PostController {
     @ApiOperation(value = "Updated post", notes = "This can only be done by the logged in user", authorizations = {@Authorization(value = "apiKey")})
     @PutMapping(value = "/{id}", produces = "application/json")
     public ResponseEntity<Post> updatePost(@ApiParam(value = "Post id is required to change", example = "1")
-                                           @PathVariable("id") Long id, @RequestBody Post post) {
+                                           @PathVariable("id") Long id,@Valid @RequestBody Post post,
+                                           BindingResult bindingResult) {
 
-        idValidator.validateID(id);
-
-        if (postRepository.findById(id).isEmpty()) {
-            throw new NotFoundException();
+        if (bindingResult.hasErrors())  {
+            throw new InvalidException();
         }
 
+        idValidator.validatePostID(id);
         post.setId(id);
-        Post save = postRepository.save(post);
-        return ResponseEntity.ok(save);
+
+        return ResponseEntity.ok(postService.save(post));
     }
 }

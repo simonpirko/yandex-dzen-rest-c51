@@ -1,9 +1,8 @@
 package by.tms.dzen.yandexdzenrestc51.controller;
 
 import by.tms.dzen.yandexdzenrestc51.entity.Like;
-import by.tms.dzen.yandexdzenrestc51.exception.NotFoundException;
 import by.tms.dzen.yandexdzenrestc51.service.LikeService;
-import by.tms.dzen.yandexdzenrestc51.validator.LikeValidator;
+import by.tms.dzen.yandexdzenrestc51.validator.IdValidator;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -17,12 +16,12 @@ import org.springframework.web.bind.annotation.*;
 @Api(tags = "Like", description = "Operations with Like")
 @RequestMapping("/api/v1/like")
 public class LikeController {
-    private final LikeValidator likeValidator;
+    private final IdValidator idValidator;
     private final LikeService likeService;
 
-    public LikeController(LikeValidator likeValidator, LikeService likeService) {
-        this.likeValidator = likeValidator;
+    public LikeController(LikeService likeService, IdValidator idValidator) {
         this.likeService = likeService;
+        this.idValidator = idValidator;
     }
 
     @ApiResponses(value = {
@@ -39,8 +38,7 @@ public class LikeController {
                                      @ApiParam(value = "Add like for the post", example = "1")
                                      @PathVariable("postId") Long postId) {
 
-        likeValidator.validateID(userId, postId);
-        likeValidator.existsByUserIdAndPostId(userId, postId);
+        validate(userId, postId);
 
         return ResponseEntity.ok(likeService.addLike(userId, postId));
     }
@@ -58,12 +56,17 @@ public class LikeController {
                        @ApiParam(value = "Remove the like from the post", example = "1")
                        @PathVariable("postId") Long postId) {
 
-        likeValidator.validateID(userId, postId);
+        validate(userId, postId);
+        likeService.removeLike(userId, postId);
+    }
 
-        if (likeValidator.existsByUserIdAndPostId(userId, postId)) {
-            likeService.removeLike(userId, postId);
-        } else {
-            throw new NotFoundException();
-        }
+    private void validate(long id, long userId, long postId) {
+        idValidator.validateID(id);
+        validate(userId, postId);
+    }
+
+    private void validate(long userId, long postId) {
+        idValidator.validateUserID(userId);
+        idValidator.validatePostID(postId);
     }
 }
