@@ -4,10 +4,8 @@ import by.tms.dzen.yandexdzenrestc51.entity.Comment;
 import by.tms.dzen.yandexdzenrestc51.entity.Status;
 import by.tms.dzen.yandexdzenrestc51.exception.NotFoundException;
 import by.tms.dzen.yandexdzenrestc51.repository.CommentRepository;
-import by.tms.dzen.yandexdzenrestc51.repository.PostRepository;
 import by.tms.dzen.yandexdzenrestc51.service.Crud;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -15,8 +13,6 @@ import java.util.List;
 @Slf4j
 @Component
 public class CommentService implements Crud<Comment> {
-    @Autowired
-    private PostRepository postRepository;
     private final CommentRepository commentRepository;
 
     public CommentService(CommentRepository commentRepository) {
