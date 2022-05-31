@@ -15,15 +15,17 @@ import io.swagger.annotations.Authorization;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
 
+@PreAuthorize("hasRole('USER')")
 @RestController
 @Api(tags = "Post", description = "Access to posts")
-@RequestMapping("/api/v1/post")
+@RequestMapping("/api/v1/user/post")
 public class PostController {
     private final PostService postService;
     private final IdValidator idValidator;

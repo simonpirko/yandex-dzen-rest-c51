@@ -12,15 +12,17 @@ import io.swagger.annotations.Authorization;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
 
+@PreAuthorize("hasRole('USER')")
 @RestController
 @Api(tags = "Category", description = "Operations with category")
-@RequestMapping("/api/v1/category")
+@RequestMapping("/api/v1/user/category")
 public class CategoryController {
     private final CategoryService categoryService;
     private final IdValidator idValidator;

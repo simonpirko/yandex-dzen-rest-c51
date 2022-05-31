@@ -10,11 +10,13 @@ import io.swagger.annotations.Authorization;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+@PreAuthorize("hasRole('USER')")
 @RestController
 @Api(tags = "Like", description = "Operations with Like")
-@RequestMapping("/api/v1/like")
+@RequestMapping("/api/v1/user/like")
 public class LikeController {
     private final IdValidator idValidator;
     private final LikeService likeService;

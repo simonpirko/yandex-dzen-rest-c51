@@ -20,6 +20,7 @@ import io.swagger.annotations.Authorization;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,6 +29,7 @@ import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@PreAuthorize("hasRole('ADMIN')")
 @RestController
 @Api(tags = "User", description = "Operation about user")
 @RequestMapping("/api/v1/admin")

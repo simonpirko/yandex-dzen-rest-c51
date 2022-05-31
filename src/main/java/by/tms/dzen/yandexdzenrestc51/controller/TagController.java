@@ -13,15 +13,17 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+@PreAuthorize("hasRole('USER')")
 @Slf4j
 @RestController
 @Api(tags = "Tag", description = "Access to tag")
-@RequestMapping("/api/v1/tag")
+@RequestMapping("/api/v1/user/tag")
 public class TagController {
     private final TagService tagService;
 

@@ -11,11 +11,13 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+@PreAuthorize("hasRole('USER')")
 @RestController
 @Api(tags = "DisLike", description = "Operations with DisLike")
-@RequestMapping("/api/v1/dislike")
+@RequestMapping("/api/v1/user/dislike")
 public class DisLikeController {
     @Autowired
     private IdValidator idValidator;
