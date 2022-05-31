@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @PreAuthorize("hasRole('USER')")
+
 @Slf4j
 @RestController
 @Api(tags = "Tag", description = "Access to tag")

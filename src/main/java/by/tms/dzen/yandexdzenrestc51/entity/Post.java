@@ -16,6 +16,7 @@ import java.util.List;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
+//@EntityListeners(AuditingEntityListener.class)
 @Table(name = "POSTS")
 public class Post {
     @Id
@@ -25,6 +26,7 @@ public class Post {
     @NotNull
     private String title;
 
+//    @CreatedDate
     @NotNull
     private LocalDateTime createDate;
 
