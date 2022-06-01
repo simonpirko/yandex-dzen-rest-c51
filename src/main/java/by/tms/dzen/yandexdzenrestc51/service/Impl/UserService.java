@@ -11,6 +11,7 @@ import by.tms.dzen.yandexdzenrestc51.repository.RoleRepository;
 import by.tms.dzen.yandexdzenrestc51.repository.UserRepository;
 import by.tms.dzen.yandexdzenrestc51.service.Crud;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -92,5 +93,14 @@ public class UserService implements Crud<User> {
     public User findById(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User with id: " + id + " not found"));
+    }
+
+    public String getAuthenticationUserName() {
+        return SecurityContextHolder.getContext().getAuthentication().getName();
+    }
+
+    public User getAuthenticationUser() {
+        return userRepository.findByUsername(getAuthenticationUserName()).get();
+
     }
 }

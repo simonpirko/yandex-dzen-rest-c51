@@ -2,11 +2,13 @@ package by.tms.dzen.yandexdzenrestc51.controller;
 
 import by.tms.dzen.yandexdzenrestc51.dto.PostDTO;
 import by.tms.dzen.yandexdzenrestc51.entity.Post;
+import by.tms.dzen.yandexdzenrestc51.exception.ForbiddenException;
 import by.tms.dzen.yandexdzenrestc51.exception.InvalidException;
 import by.tms.dzen.yandexdzenrestc51.exception.NotFoundException;
 import by.tms.dzen.yandexdzenrestc51.mapper.PostMapper;
 import by.tms.dzen.yandexdzenrestc51.repository.UserRepository;
 import by.tms.dzen.yandexdzenrestc51.service.Impl.PostService;
+import by.tms.dzen.yandexdzenrestc51.service.Impl.UserService;
 import by.tms.dzen.yandexdzenrestc51.validator.IdValidator;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -27,16 +29,18 @@ import java.util.List;
 @Api(tags = "Post", description = "Access to posts")
 @RequestMapping("/api/v1/user/post")
 public class PostController {
+    private final UserService userService;
     private final PostService postService;
     private final IdValidator idValidator;
     private final UserRepository userRepository;
     private final PostMapper postMapper;
 
-    public PostController(UserRepository userRepository, PostMapper postMapper, IdValidator idValidator, PostService postService) {
+    public PostController(UserRepository userRepository, PostMapper postMapper, IdValidator idValidator, PostService postService, UserService userService) {
         this.userRepository = userRepository;
         this.postMapper = postMapper;
         this.idValidator = idValidator;
         this.postService = postService;
+        this.userService = userService;
     }
 
     @ApiResponses(value = {
@@ -51,8 +55,12 @@ public class PostController {
                                         @PathVariable("id") Long id) {
 
         idValidator.validatePostId(id);
-
-        return ResponseEntity.ok(postService.findById(id));
+        Post postById = postService.findById(id);
+        if (postById.getUser().getId() == userService.getAuthenticationUser().getId()) {
+            return ResponseEntity.ok(postById);
+        } else {
+            throw new ForbiddenException("You have no access to this post");
+        }
     }
 
     @ApiResponses(value = {
@@ -106,7 +114,13 @@ public class PostController {
                            @PathVariable("id") Long id) {
 
         idValidator.validatePostId(id);
-        postService.delete(id);
+
+        Post postById = postService.findById(id);
+        if (postById.getUser().getId() == userService.getAuthenticationUser().getId()) {
+            postService.delete(id);
+        } else {
+            throw new ForbiddenException("You have no access to this post");
+        }
     }
 
     @ApiResponses(value = {
@@ -126,8 +140,14 @@ public class PostController {
         }
 
         idValidator.validatePostId(id);
-        post.setId(id);
 
-        return ResponseEntity.ok(postService.save(post));
+        Post postById = postService.findById(id);
+        if (postById.getUser().getId() == userService.getAuthenticationUser().getId()) {
+            post.setId(id);
+
+            return ResponseEntity.ok(postService.save(post));
+        } else {
+            throw new ForbiddenException("You have no access to this post");
+        }
     }
 }

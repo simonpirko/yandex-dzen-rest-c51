@@ -24,6 +24,7 @@ public class Tag {
     @JsonIgnore
     private Status status;
 
+    @JsonIgnore
     @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     private Post post;
 }

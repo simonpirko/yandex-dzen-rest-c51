@@ -21,6 +21,7 @@ public class Like {
     @ManyToOne
     private User user;
 
+    @JsonIgnore
     @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     private Post post;
 }

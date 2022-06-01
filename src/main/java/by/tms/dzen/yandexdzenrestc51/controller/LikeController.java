@@ -1,6 +1,7 @@
 package by.tms.dzen.yandexdzenrestc51.controller;
 
 import by.tms.dzen.yandexdzenrestc51.entity.Like;
+import by.tms.dzen.yandexdzenrestc51.service.Impl.UserService;
 import by.tms.dzen.yandexdzenrestc51.service.LikeService;
 import by.tms.dzen.yandexdzenrestc51.validator.IdValidator;
 import io.swagger.annotations.Api;
@@ -18,12 +19,14 @@ import org.springframework.web.bind.annotation.*;
 @Api(tags = "Like", description = "Operations with Like")
 @RequestMapping("/api/v1/user/like")
 public class LikeController {
+    private final UserService userService;
     private final IdValidator idValidator;
     private final LikeService likeService;
 
-    public LikeController(LikeService likeService, IdValidator idValidator) {
+    public LikeController(LikeService likeService, IdValidator idValidator, UserService userService) {
         this.likeService = likeService;
         this.idValidator = idValidator;
+        this.userService = userService;
     }
 
     @ApiResponses(value = {
@@ -60,11 +63,6 @@ public class LikeController {
 
         validate(userId, postId);
         likeService.removeLike(userId, postId);
-    }
-
-    private void validate(long id, long userId, long postId) {
-        idValidator.validateId(id);
-        validate(userId, postId);
     }
 
     private void validate(long userId, long postId) {

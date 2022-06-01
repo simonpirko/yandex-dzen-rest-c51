@@ -76,41 +76,5 @@ public class CategoryController {
         idValidator.validateId(id);
         return ResponseEntity.ok(categoryService.findById(id));
     }
-
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successful operation"),
-            @ApiResponse(responseCode = "403", description = "Forbidden"),
-            @ApiResponse(responseCode = "405", description = "Invalid input")
-    })
-    @ApiOperation(value = "Delete category by ID", notes = "This can only be done by the logged in user", authorizations = {@Authorization(value = "apiKey")})
-    @DeleteMapping(value = "/{id}", produces = "application/json")
-    public void delete(@ApiParam(value = "Delete category by ID", example = "1")
-                       @PathVariable("id") Long id) {
-
-        idValidator.validateId(id);
-        categoryService.delete(id);
-    }
-
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successful operation"),
-            @ApiResponse(responseCode = "403", description = "Forbidden"),
-            @ApiResponse(responseCode = "405", description = "Invalid input")
-    })
-    @ApiOperation(value = "Update category by ID", notes = "This can only be done by the logged in user", authorizations = {@Authorization(value = "apiKey")})
-    @PutMapping(value = "/{id}", produces = "application/json")
-    public ResponseEntity<Category> update(@ApiParam(value = "Update category by ID", example = "1")
-                                           @PathVariable("id") Long id,
-                                           @Valid @RequestBody Category category,
-                                           BindingResult bindingResult) {
-
-        idValidator.validateId(id);
-
-        if (bindingResult.hasErrors()) {
-            throw new InvalidException();
-        }
-
-        category.setId(id);
-        return ResponseEntity.ok(categoryService.update(category));
-    }
 }
 
