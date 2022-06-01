@@ -16,6 +16,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -80,7 +81,6 @@ public class AuthenticationController {
         return new ResponseEntity<>(resp, HttpStatus.OK);
     }
 
-
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Created"),
             @ApiResponse(responseCode = "405", description = "Invalid input")
@@ -99,6 +99,7 @@ public class AuthenticationController {
         return new ResponseEntity<>(userDTO, HttpStatus.CREATED);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successful operation"),
             @ApiResponse(responseCode = "403", description = "Forbidden")
