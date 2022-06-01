@@ -32,8 +32,10 @@
         create_date timestamp not null,
         number_of_reads bigint not null,
         post_type integer not null,
+        status integer,
         title varchar(255) not null,
-        user_id bigint, primary key (id)
+        user_id bigint,
+        primary key (id)
     );
 
     create table roles (

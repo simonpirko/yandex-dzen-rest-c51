@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
@@ -24,6 +25,9 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
     @Value("${exists}")
     private String msgExists;
 
+    @Value("${forbidden}")
+    private String msgForbidden;
+
     @ExceptionHandler(InvalidException.class)
     public ResponseEntity<Object> invalidInputException(InvalidException ex) {
         return new ResponseEntity(msgInvalidInput, HttpStatus.BAD_REQUEST);
@@ -37,5 +41,10 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
     @ExceptionHandler(ExistsException.class)
     public ResponseEntity<Object> userExistsException(ExistsException ex) {
         return new ResponseEntity(msgExists, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<Object> accessDeniedException(AccessDeniedException ex) {
+        return new ResponseEntity(msgForbidden, HttpStatus.FORBIDDEN);
     }
 }

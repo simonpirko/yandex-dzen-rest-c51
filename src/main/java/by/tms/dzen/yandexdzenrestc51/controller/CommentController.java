@@ -12,6 +12,7 @@ import io.swagger.annotations.Authorization;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,9 +20,10 @@ import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@PreAuthorize("hasRole('USER')")
 @RestController
 @Api(tags = "Comment", description = "Operations with comments")
-@RequestMapping("/api/v1/comment")
+@RequestMapping("/api/v1/user/comment")
 public class CommentController {
     private final CommentService commentService;
     private final IdValidator idValidator;
