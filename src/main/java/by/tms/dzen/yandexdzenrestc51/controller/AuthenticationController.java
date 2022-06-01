@@ -107,7 +107,7 @@ public class AuthenticationController {
     @ApiOperation(value = "Logout user", notes = "This can only be done by the logged in user",
             authorizations = {@Authorization(value = "apiKey")})
     @GetMapping(value = "/logout")
-    public ResponseEntity<Map<Object, Object>> logOut(HttpSession session, HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<Map<Object, Object>> logout(HttpSession session, HttpServletRequest request, HttpServletResponse response) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Map<Object, Object> resp = new HashMap<>();
 
