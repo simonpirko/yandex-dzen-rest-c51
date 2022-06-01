@@ -53,6 +53,7 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Post> posts;
 
+    @JsonIgnore
     @OneToMany (mappedBy = "user", cascade = CascadeType.ALL)
     private List<Subscriber> subscriberList;
 }
