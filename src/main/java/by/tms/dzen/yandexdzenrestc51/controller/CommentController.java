@@ -1,9 +1,11 @@
 package by.tms.dzen.yandexdzenrestc51.controller;
 
 import by.tms.dzen.yandexdzenrestc51.entity.Comment;
+import by.tms.dzen.yandexdzenrestc51.exception.ForbiddenException;
 import by.tms.dzen.yandexdzenrestc51.exception.InvalidException;
 import by.tms.dzen.yandexdzenrestc51.repository.PostRepository;
 import by.tms.dzen.yandexdzenrestc51.service.Impl.CommentService;
+import by.tms.dzen.yandexdzenrestc51.service.Impl.UserService;
 import by.tms.dzen.yandexdzenrestc51.validator.IdValidator;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -25,14 +27,16 @@ import java.util.List;
 @Api(tags = "Comment", description = "Operations with comments")
 @RequestMapping("/api/v1/user/comment")
 public class CommentController {
+    private final UserService userService;
     private final CommentService commentService;
     private final IdValidator idValidator;
     private final PostRepository postRepository;
 
-    public CommentController(PostRepository postRepository, IdValidator idValidator, CommentService commentService) {
+    public CommentController(PostRepository postRepository, IdValidator idValidator, CommentService commentService, UserService userService) {
         this.postRepository = postRepository;
         this.idValidator = idValidator;
         this.commentService = commentService;
+        this.userService = userService;
     }
 
     @ApiResponses(value = {
@@ -56,10 +60,14 @@ public class CommentController {
             throw new InvalidException();
         }
 
-        comment.setCreateDate(LocalDateTime.now());
-        comment.setPost(postRepository.getById(postId));
+        if (userId == userService.getAuthenticationUser().getId()) {
+            comment.setCreateDate(LocalDateTime.now());
+            comment.setPost(postRepository.getById(postId));
 
-        return ResponseEntity.ok(commentService.save(comment));
+            return ResponseEntity.ok(commentService.save(comment));
+        } else {
+            throw new ForbiddenException();
+        }
     }
 
     @ApiResponses(value = {
@@ -113,9 +121,14 @@ public class CommentController {
                                                  @RequestBody Comment comment) {
 
         validate(id, userId, postId);
-        comment.setId(id);
 
-        return ResponseEntity.ok(commentService.save(comment));
+        if (userId == userService.getAuthenticationUser().getId() && commentService.findById(id).getPost().getUser().getId() == userId) {
+            comment.setId(id);
+
+            return ResponseEntity.ok(commentService.save(comment));
+        } else {
+            throw new ForbiddenException();
+        }
     }
 
     @ApiResponses(value = {
@@ -132,7 +145,11 @@ public class CommentController {
                               @PathVariable("id") Long id) {
 
         validate(id, userId, postId);
-        commentService.delete(id);
+        if (userId == userService.getAuthenticationUser().getId() && commentService.findById(id).getPost().getUser().getId() == userId) {
+            commentService.delete(id);
+        } else {
+            throw new ForbiddenException();
+        }
     }
 
     private void validate(long id, long userId, long postId) {

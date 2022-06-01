@@ -1,9 +1,11 @@
 package by.tms.dzen.yandexdzenrestc51.controller;
 
 import by.tms.dzen.yandexdzenrestc51.entity.Tag;
+import by.tms.dzen.yandexdzenrestc51.exception.ForbiddenException;
 import by.tms.dzen.yandexdzenrestc51.exception.InvalidException;
 import by.tms.dzen.yandexdzenrestc51.exception.NotFoundException;
 import by.tms.dzen.yandexdzenrestc51.repository.TagRepository;
+import by.tms.dzen.yandexdzenrestc51.service.Impl.UserService;
 import by.tms.dzen.yandexdzenrestc51.service.TagService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -26,13 +28,15 @@ import javax.validation.Valid;
 @Api(tags = "Tag", description = "Access to tag")
 @RequestMapping("/api/v1/user/tag")
 public class TagController {
+    private final UserService userService;
     private final TagService tagService;
 
     private final TagRepository tagRepository;
 
-    public TagController(TagRepository tagRepository, TagService tagService) {
+    public TagController(TagRepository tagRepository, TagService tagService, UserService userService) {
         this.tagRepository = tagRepository;
         this.tagService = tagService;
+        this.userService = userService;
     }
 
     @ApiResponses(value = {
@@ -44,7 +48,9 @@ public class TagController {
     @ApiOperation(value = "Save tag", notes = "This can only be done by the logged in user", authorizations = {@Authorization(value = "apiKey")})
     @PostMapping
     public ResponseEntity<Tag> save(@ApiParam(value = "Create new tag object", example = "Tag")
-                                         @Valid @RequestBody Tag tag, BindingResult bindingResult) {
+                                    @Valid @RequestBody Tag tag,
+                                    BindingResult bindingResult) {
+
         if (bindingResult.hasErrors()) {
             throw new InvalidException();
         }
@@ -76,6 +82,10 @@ public class TagController {
             throw new NotFoundException();
         }
 
-        tagService.deleteById(tag.getId());
+        if (tag.getPost().getUser().getId() != userService.getAuthenticationUser().getId()) {
+            throw new ForbiddenException();
+        } else {
+            tagService.deleteById(tag.getId());
+        }
     }
 }

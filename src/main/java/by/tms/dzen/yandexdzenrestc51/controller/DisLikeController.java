@@ -9,7 +9,6 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.Authorization;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -19,12 +18,12 @@ import org.springframework.web.bind.annotation.*;
 @Api(tags = "DisLike", description = "Operations with DisLike")
 @RequestMapping("/api/v1/user/dislike")
 public class DisLikeController {
-    @Autowired
-    private IdValidator idValidator;
+    private final IdValidator idValidator;
     private final DisLikeService disLikeService;
 
-    public DisLikeController(DisLikeService disLikeService) {
+    public DisLikeController(DisLikeService disLikeService, IdValidator idValidator) {
         this.disLikeService = disLikeService;
+        this.idValidator = idValidator;
     }
 
     @ApiResponses(value = {
@@ -41,10 +40,7 @@ public class DisLikeController {
                                         @ApiParam(value = "Add dislike for the post", example = "1")
                                         @PathVariable("postId") Long postId) {
 
-        idValidator.validateId(userId);
-        idValidator.validateId(postId);
-        idValidator.validateUserId(userId);
-        idValidator.validatePostId(postId);
+        validate(userId, postId);
 
         return ResponseEntity.ok(disLikeService.addDisLike(userId, postId));
     }
@@ -62,11 +58,13 @@ public class DisLikeController {
                        @ApiParam(value = "Remove the dislike from the post", example = "1")
                        @PathVariable("postId") Long postId) {
 
-        idValidator.validateId(userId);
-        idValidator.validateId(postId);
-        idValidator.validateUserId(userId);
-        idValidator.validatePostId(postId);
+        validate(userId, postId);
 
         disLikeService.removeDisLike(userId, postId);
+    }
+
+    private void validate(long userId, long postId) {
+        idValidator.validateUserId(userId);
+        idValidator.validatePostId(postId);
     }
 }
