@@ -1,11 +1,13 @@
 package by.tms.dzen.yandexdzenrestc51.controller;
 
+import by.tms.dzen.yandexdzenrestc51.entity.Subscriber;
 import by.tms.dzen.yandexdzenrestc51.entity.User;
 import by.tms.dzen.yandexdzenrestc51.exception.ExistsException;
 import by.tms.dzen.yandexdzenrestc51.exception.InvalidException;
 import by.tms.dzen.yandexdzenrestc51.exception.NotFoundException;
 import by.tms.dzen.yandexdzenrestc51.repository.UserRepository;
 import by.tms.dzen.yandexdzenrestc51.service.Impl.UserService;
+import by.tms.dzen.yandexdzenrestc51.validator.IdValidator;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -18,6 +20,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -26,10 +29,12 @@ import javax.validation.Valid;
 public class UserController {
     private final UserService userService;
     private final UserRepository userRepository;
+    private final IdValidator idValidator;
 
-    public UserController(UserRepository userRepository, UserService userService) {
+    public UserController(UserRepository userRepository, UserService userService, IdValidator idValidator) {
         this.userRepository = userRepository;
         this.userService = userService;
+        this.idValidator = idValidator;
     }
 
     @ApiResponses(value = {
@@ -119,4 +124,37 @@ public class UserController {
         User user = userRepository.findByUsername(username).get();
         userService.delete(user);
     }
+
+
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful operation"),
+            @ApiResponse(responseCode = "403", description = "Forbidden"),
+            @ApiResponse(responseCode = "404", description = "User not found"),
+            @ApiResponse(responseCode = "405", description = "Invalid input")
+    })
+    @ApiOperation(value = "Adding a subscriber to a user", notes = "This can only be done by the logged in user",
+            authorizations = {@Authorization(value = "apiKey")})
+    @PostMapping(value = "/idUser/subscriber/idSubscriber", produces = "application/json")
+    private ResponseEntity<User> addSubscriberUser(@ApiParam(value = "user id is required to add subscribers", example = "1")
+                                                   @PathVariable("idUser") Long idUser,
+                                                   @ApiParam(value = "Subscriber id is required to add a subscriber " +
+                                                           "to a user", example = "2")
+                                                   @PathVariable("idSubscriber") Long idSubscriber) {
+        idValidator.validateUserId(idUser);
+        idValidator.validateUserId(idSubscriber);
+
+        if (idUser == idSubscriber) {
+            throw new InvalidException();
+        }
+
+        User user = userRepository.getById(idUser);
+        List<Subscriber> subscriberList = user.getSubscriberList();
+        User userSubscriber = userRepository.getById(idSubscriber);
+        Subscriber subscriber = new Subscriber();
+        subscriber.setUser(userSubscriber);
+        subscriberList.add(subscriber);
+        user.setSubscriberList(subscriberList);
+        return ResponseEntity.ok(user);
+    }
+
 }
