@@ -120,7 +120,8 @@ public class AdminController {
         if (userRepository.findByUsername(user.getUsername()).isPresent()) {
             throw new ExistsException();
         }
-        User save = userRepository.save(user);
+
+        var save = userRepository.save(user);
 
         return ResponseEntity.ok(save);
     }
@@ -147,7 +148,8 @@ public class AdminController {
         if (username == null | userRepository.findByUsername(username).isEmpty()) {
             throw new NotFoundException();
         }
-        User update = userRepository.findByUsername(username).get();
+
+        var update = userRepository.findByUsername(username).get();
         user.setId(update.getId());
         userService.update(user);
 
@@ -169,8 +171,7 @@ public class AdminController {
             throw new NotFoundException();
         }
 
-        User user = userRepository.findByUsername(username).get();
-        userService.delete(user);
+        userService.delete(userRepository.findByUsername(username).get());
     }
 
     @ApiResponses(value = {
@@ -185,7 +186,7 @@ public class AdminController {
                                         @PathVariable("id") Long id) {
 
         idValidator.validatePostId(id);
-        Post getPost = postRepository.findById(id).get();
+        var getPost = postRepository.findById(id).get();
 
         return ResponseEntity.ok(getPost);
     }
@@ -224,12 +225,11 @@ public class AdminController {
 
         idValidator.validateUserId(userId);
 
-        Post post = postMapper.postDTOToPost(postDto);
+        var post = postMapper.postDTOToPost(postDto);
         post.setUser(userRepository.findById(userId).get());
         post.setCreateDate(LocalDateTime.now());
-        Post save = postRepository.save(post);
 
-        return ResponseEntity.ok(save);
+        return ResponseEntity.ok(postRepository.save(post));
     }
 
     @ApiResponses(value = {
@@ -250,11 +250,9 @@ public class AdminController {
         }
 
         idValidator.validatePostId(id);
-
         post.setId(id);
-        Post save = postRepository.save(post);
 
-        return ResponseEntity.ok(save);
+        return ResponseEntity.ok(postRepository.save(post));
     }
 
     @ApiResponses(value = {
@@ -287,11 +285,7 @@ public class AdminController {
                                               @ApiParam(value = "Id is required to receive a comment on this id", example = "1")
                                               @PathVariable("id") Long id) {
 
-        idValidator.validateId(id);
-        idValidator.validateId(userId);
-        idValidator.validateId(postId);
-        idValidator.validateUserId(userId);
-        idValidator.validatePostId(postId);
+        validate(id, userId, postId);
 
         if (commentRepository.findById(id).isEmpty()) {
             throw new NotFoundException();
@@ -334,10 +328,7 @@ public class AdminController {
                                               @Valid @RequestBody Comment comment,
                                               BindingResult bindingResult) {
 
-        idValidator.validateId(userId);
-        idValidator.validateId(postId);
-        idValidator.validateUserId(userId);
-        idValidator.validatePostId(postId);
+        validate(userId, postId);
 
         if (bindingResult.hasErrors()) {
             throw new InvalidException();
@@ -345,9 +336,8 @@ public class AdminController {
 
         comment.setCreateDate(LocalDateTime.now());
         comment.setPost(postRepository.getById(postId));
-        Comment save = commentRepository.save(comment);
 
-        return ResponseEntity.ok(save);
+        return ResponseEntity.ok(commentRepository.save(comment));
     }
 
     @ApiResponses(value = {
@@ -368,11 +358,7 @@ public class AdminController {
                                                  @ApiParam(value = "Creating a modified comment object", example = "Comment")
                                                  @RequestBody Comment comment) {
 
-        idValidator.validateId(id);
-        idValidator.validateId(userId);
-        idValidator.validateId(postId);
-        idValidator.validateUserId(userId);
-        idValidator.validatePostId(postId);
+        validate(id, userId, postId);
 
         if (commentRepository.findById(id).isEmpty()) {
             throw new NotFoundException();
@@ -398,7 +384,6 @@ public class AdminController {
                               @ApiParam(value = "Id is required to receive a comment on this id", example = "1")
                               @PathVariable("id") Long id) {
 
-
         validate(id, userId, postId, id);
         commentService.delete(id);
     }
@@ -415,7 +400,6 @@ public class AdminController {
                                                 @PathVariable("id") Long id) {
 
         idValidator.validateCategoryId(id);
-
         return ResponseEntity.ok(categoryRepository.findById(id).get());
     }
 
@@ -512,9 +496,7 @@ public class AdminController {
             throw new NotFoundException();
         }
 
-        Tag saveTag = tagRepository.save(tag);
-
-        return ResponseEntity.ok(saveTag);
+        return ResponseEntity.ok(tagRepository.save(tag));
     }
 
     @ApiResponses(value = {
@@ -530,6 +512,7 @@ public class AdminController {
 
         idValidator.validateTagId(id);
         tagService.deleteById(id);
+
         if (tagRepository.findById(id).isEmpty()) {
             throw new NotFoundException();
         }
