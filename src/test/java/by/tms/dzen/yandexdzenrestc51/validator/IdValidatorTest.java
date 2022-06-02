@@ -14,12 +14,12 @@ class IdValidatorTest {
     private IdValidator idValidator;
 
     @Test
-    void validateIdFalseZero() {
+    void validateIdZeroFalse() {
         assertThrows(InvalidException.class, () -> idValidator.validateId(0));
     }
 
     @Test
-    void validateIdFalseMinus() {
+    void validateIdMinusFalse() {
         assertThrows(InvalidException.class, () -> idValidator.validateId(-1));
     }
 
@@ -33,7 +33,18 @@ class IdValidatorTest {
     }
 
     @Test
-    void validateUserId() {
+    void validateUserIdTrue() {
+        assertDoesNotThrow(() -> idValidator.validateUserId(1));
+    }
+
+    @Test
+    void validateUserIdZeroFalse() {
+        assertThrows(InvalidException.class, () -> idValidator.validateUserId(0));
+    }
+
+    @Test
+    void validateUserIdMinusFalse() {
+        assertThrows(InvalidException.class, () -> idValidator.validateUserId(-1));
     }
 
     @Test

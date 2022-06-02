@@ -1,7 +1,6 @@
 package by.tms.dzen.yandexdzenrestc51.validator;
 
 import by.tms.dzen.yandexdzenrestc51.exception.InvalidException;
-import by.tms.dzen.yandexdzenrestc51.exception.NotFoundException;
 import by.tms.dzen.yandexdzenrestc51.repository.*;
 import org.springframework.stereotype.Component;
 
@@ -57,7 +56,7 @@ public class IdValidator {
 
     public void validateTagId(long id) {
         if (tagRepository.findById(id).isEmpty()) {
-            throw new NotFoundException();
+            throw new InvalidException();
         }
     }
 }
