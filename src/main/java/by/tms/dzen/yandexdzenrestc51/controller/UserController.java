@@ -140,7 +140,7 @@ public class UserController {
     @ApiOperation(value = "Adding a subscriber to a user", notes = "This can only be done by the logged in user",
             authorizations = {@Authorization(value = "apiKey")})
     @PostMapping(value = "/{idUser}/subscriber/{idSubscriber}", produces = "application/json")
-    private ResponseEntity<User> addSubscriberUser(@ApiParam(value = "user id is required to add subscribers", example = "1")
+    private void addSubscriberUser(@ApiParam(value = "user id is required to add subscribers", example = "1")
                                                    @PathVariable("idUser") Long idUser,
                                                    @ApiParam(value = "Subscriber id is required to add a subscriber " +
                                                            "to a user", example = "2")
@@ -148,18 +148,10 @@ public class UserController {
         idValidator.validateUserId(idUser);
         idValidator.validateUserId(idSubscriber);
 
-        if (idUser == idSubscriber) {
+        if (idUser.equals(idSubscriber)) {
             throw new InvalidException();
         }
-
-        var user = userRepository.getById(idUser);
-        List<Subscriber> subscriberList = user.getSubscriberList();
-        var userSubscriber = userRepository.getById(idSubscriber);
-        Subscriber subscriber = new Subscriber();
-        subscriber.setUser(userSubscriber);
-        subscriberList.add(subscriber);
-        user.setSubscriberList(subscriberList);
-        return ResponseEntity.ok(user);
+        userService.addSubscriberUser(idUser, idSubscriber);
     }
 
     @ApiResponses(value = {
@@ -173,7 +165,6 @@ public class UserController {
     private ResponseEntity<List<Subscriber>> getAllSubscribersUser(@ApiParam(value = "id is required to get a user", example = "1")
                                                    @PathVariable("idUser") Long idUser) {
         idValidator.validateUserId(idUser);
-
         var user = userRepository.getById(idUser);
 
         return ResponseEntity.ok(user.getSubscriberList());
@@ -189,7 +180,7 @@ public class UserController {
     @ApiOperation(value = "Deleting a user's followers", notes = "This can only be done by the logged in user",
             authorizations = {@Authorization(value = "apiKey")})
     @DeleteMapping(value = "/{idUser}/subscriber/{idSubscriber}", produces = "application/json")
-    private ResponseEntity<User> deleteSubscriberUser(@ApiParam(value = "user id is required to search for the user itself", example = "1")
+    private void deleteSubscriberUser(@ApiParam(value = "user id is required to search for the user itself", example = "1")
                                                       @PathVariable("idUser") Long idUser,
                                                       @ApiParam(value = "the subscriber ID is required to remove the user's subscriber", example = "2")
                                                       @PathVariable("idSubscriber") Long idSubscriber) {
@@ -200,13 +191,6 @@ public class UserController {
             throw new InvalidException();
         }
 
-        var user = userRepository.getById(idUser);
-        List<Subscriber> subscriberList = user.getSubscriberList();
-        var userSubscriber = userRepository.getById(idSubscriber);
-
-        subscriberList.remove(subscriberRepository.findByUser(userSubscriber).get());
-        user.setSubscriberList(subscriberList);
-
-        return ResponseEntity.ok(user);
+        userService.deleteSubscriberUser(idUser, idSubscriber);
     }
 }

@@ -3,11 +3,13 @@ package by.tms.dzen.yandexdzenrestc51.service.Impl;
 import by.tms.dzen.yandexdzenrestc51.dto.UserDTO;
 import by.tms.dzen.yandexdzenrestc51.entity.Role;
 import by.tms.dzen.yandexdzenrestc51.entity.Status;
+import by.tms.dzen.yandexdzenrestc51.entity.Subscriber;
 import by.tms.dzen.yandexdzenrestc51.entity.User;
 import by.tms.dzen.yandexdzenrestc51.exception.ExistsException;
 import by.tms.dzen.yandexdzenrestc51.exception.NotFoundException;
 import by.tms.dzen.yandexdzenrestc51.mapper.UserConverter;
 import by.tms.dzen.yandexdzenrestc51.repository.RoleRepository;
+import by.tms.dzen.yandexdzenrestc51.repository.SubscriberRepository;
 import by.tms.dzen.yandexdzenrestc51.repository.UserRepository;
 import by.tms.dzen.yandexdzenrestc51.service.Crud;
 import lombok.extern.slf4j.Slf4j;
@@ -22,10 +24,14 @@ import java.util.List;
 public class UserService implements Crud<User> {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final SubscriberRepository subscriberRepository;
 
-    public UserService(UserRepository userRepository, RoleRepository roleRepository) {
+    public UserService(UserRepository userRepository,
+                       RoleRepository roleRepository,
+                       SubscriberRepository subscriberRepository) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
+        this.subscriberRepository = subscriberRepository;
     }
 
     public void registration(UserDTO userDTO) {
@@ -103,4 +109,25 @@ public class UserService implements Crud<User> {
         return userRepository.findByUsername(getAuthenticationUserName()).get();
 
     }
+
+    public void addSubscriberUser(Long idUser, Long idSubscriber){
+        var user = userRepository.getById(idUser);
+        List<Subscriber> subscriberList = user.getSubscriberList();
+        var userSubscriber = userRepository.getById(idSubscriber);
+        Subscriber subscriber = new Subscriber();
+        subscriber.setUser(userSubscriber);
+        subscriberList.add(subscriber);
+        user.setSubscriberList(subscriberList);
+        userRepository.save(user);
+    }
+
+    public void deleteSubscriberUser(Long idUser, Long idSubscriber){
+        var user = userRepository.getById(idUser);
+        List<Subscriber> subscriberList = user.getSubscriberList();
+        var userSubscriber = userRepository.getById(idSubscriber);
+        subscriberList.remove(subscriberRepository.findByUser(userSubscriber).get());
+        user.setSubscriberList(subscriberList);
+        userRepository.save(user);
+    }
+
 }
