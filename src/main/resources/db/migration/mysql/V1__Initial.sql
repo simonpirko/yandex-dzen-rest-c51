@@ -48,7 +48,7 @@ create table roles (
 create table tags (
     id bigint not null auto_increment,
     name varchar(255) not null,
-    status integer,
+    status integer,status integer,
     post_id bigint,
     primary key (id)) engine=InnoDB;
 

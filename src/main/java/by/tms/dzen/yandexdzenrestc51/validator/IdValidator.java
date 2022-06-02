@@ -43,7 +43,7 @@ public class IdValidator {
     }
 
     public void validateCommentId(long id) {
-        if (id < 0 | commentRepository.findById(id).isEmpty()) {
+        if (id < 1 | commentRepository.findById(id).isEmpty()) {
             throw new InvalidException();
         }
     }
@@ -55,7 +55,7 @@ public class IdValidator {
     }
 
     public void validateTagId(long id) {
-        if (tagRepository.findById(id).isEmpty()) {
+        if (id < 1 | tagRepository.findById(id).isEmpty()) {
             throw new InvalidException();
         }
     }
