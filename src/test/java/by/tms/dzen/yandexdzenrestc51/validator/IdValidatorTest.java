@@ -32,6 +32,7 @@ class IdValidatorTest {
 
     @Test
     void validatePostId() {
+        assertDoesNotThrow(() -> idValidator.validatePostId(1L));
     }
 
     @Test
@@ -51,6 +52,7 @@ class IdValidatorTest {
 
     @Test
     void validateCommentIdTrue() {
+        assertDoesNotThrow(() -> idValidator.validateCommentId(1L));
     }
 
     @Test
@@ -65,6 +67,7 @@ class IdValidatorTest {
 
     @Test
     void validateCategoryIdTrue() {
+        assertDoesNotThrow(() -> idValidator.validateCategoryId(1L));
     }
 
     @Test
@@ -79,6 +82,7 @@ class IdValidatorTest {
 
     @Test
     void validateTagIdTrue() {
+        assertDoesNotThrow(() -> idValidator.validateTagId(1L));
     }
 
     @Test
