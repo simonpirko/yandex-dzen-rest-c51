@@ -15,6 +15,7 @@
 - Swagger
 - Lombok
 - Flyway
+- Spring Boot Test
 
 ### Board (trello.com): 
 
