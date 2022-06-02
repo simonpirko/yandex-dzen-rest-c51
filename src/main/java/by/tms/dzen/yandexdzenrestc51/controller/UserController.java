@@ -147,9 +147,9 @@ public class UserController {
             throw new InvalidException();
         }
 
-        User user = userRepository.getById(idUser);
+        var user = userRepository.getById(idUser);
         List<Subscriber> subscriberList = user.getSubscriberList();
-        User userSubscriber = userRepository.getById(idSubscriber);
+        var userSubscriber = userRepository.getById(idSubscriber);
         Subscriber subscriber = new Subscriber();
         subscriber.setUser(userSubscriber);
         subscriberList.add(subscriber);
@@ -157,4 +157,20 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful operation"),
+            @ApiResponse(responseCode = "403", description = "Forbidden"),
+            @ApiResponse(responseCode = "404", description = "User not found")
+    })
+    @ApiOperation(value = "Getting all subscribers of a user", notes = "This can only be done by the logged in user",
+            authorizations = {@Authorization(value = "apiKey")})
+    @GetMapping(value = "/idUser/subscriber", produces = "application/json")
+    private ResponseEntity<List<Subscriber>> getAllSubscribersUser(@ApiParam(value = "id is required to get a user", example = "1")
+                                                   @PathVariable("idUser") Long idUser) {
+        idValidator.validateUserId(idUser);
+
+        var user = userRepository.getById(idUser);
+
+        return ResponseEntity.ok(user.getSubscriberList());
+    }
 }
