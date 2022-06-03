@@ -1,9 +1,9 @@
 create table category (
     id bigint auto_increment,
-    count_subscriber bigint not null,
-    description varchar(255) not null,
-    image varchar(255) not null,
-    name varchar(255) not null,
+    count_subscriber bigint,
+    description varchar(255),
+    image varchar(255),
+    name varchar(255),
     status integer,
     post_id bigint,
     primary key (id)) engine=InnoDB;
@@ -30,10 +30,10 @@ create table likes (
 
 create table posts (
     id bigint auto_increment,
-    contents varchar(255) not null,
-    create_date datetime(6) not null,
-    number_of_reads bigint not null,
-    post_type integer not null,
+    contents varchar(255),
+    create_date datetime(6),
+    number_of_reads bigint,
+    post_type integer,
     status integer,
     title varchar(255) not null,
     user_id bigint,
@@ -68,13 +68,42 @@ create table users (
     username varchar(25),
     primary key (id)) engine=InnoDB;
 
-alter table category add constraint FKnllx3rg2tvqfnfp3b87slegxn foreign key (post_id) references posts (id)
-alter table comments add constraint FKh4c7lvsc298whoyd4w9ta25cr foreign key (post_id) references posts (id)
-alter table dislikes add constraint FKqt3ojfulp3juwx1gnnvjoqao3 foreign key (post_id) references posts (id)
-alter table dislikes add constraint FKdej1eqv0prsavr1warenj7ceb foreign key (user_id) references users (id)
-alter table likes add constraint FKry8tnr4x2vwemv2bb0h5hyl0x foreign key (post_id) references posts (id)
-alter table likes add constraint FKnvx9seeqqyy71bij291pwiwrg foreign key (user_id) references users (id)
-alter table posts add constraint FK5lidm6cqbc7u4xhqpxm898qme foreign key (user_id) references users (id)
-alter table roles add constraint FK97mxvrajhkq19dmvboprimeg1 foreign key (user_id) references users (id)
-alter table subscribers add constraint FKll9lhik8xj3ep6ahtdt7me7pu foreign key (user_id) references users (id)
-alter table tags add constraint FKmvt35fe5neg814lnu9ie18rvt foreign key (post_id) references posts (id)
+alter table category
+    add constraint category_posts_fk
+    foreign key (post_id) references posts (id);
+
+alter table comments
+    add constraint comments_posts_fk
+    foreign key (post_id) references posts (id);
+
+alter table dislikes
+    add constraint dislikes_posts_fk
+    foreign key (post_id) references posts (id);
+
+alter table dislikes
+    add constraint dislikes_users_fk
+    foreign key (user_id) references users (id);
+
+alter table likes
+    add constraint likes_posts_fk
+    foreign key (post_id) references posts (id);
+
+alter table likes
+    add constraint likes_users_fk
+    foreign key (user_id) references users (id);
+
+alter table posts
+    add constraint posts_users_fk
+    foreign key (user_id) references users (id);
+
+alter table roles
+    add constraint roles_users_fk
+    foreign key (user_id) references users (id);
+
+alter table subscribers
+    add constraint subscribers_users_fk
+    foreign key (user_id) references users (id);
+
+alter table tags
+    add constraint tags_posts_fk
+    foreign key (post_id) references posts (id);
