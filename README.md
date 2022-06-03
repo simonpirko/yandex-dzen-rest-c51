@@ -21,11 +21,11 @@
 
 - https://trello.com/b/dJBINntF/yandex-dzen
 
-## Docker (+ H2 database) Developer version
+## Docker (+ H2 database) developer version
 
 ### Run the following commands to build and run the application:
 
-- Gradle - Task - build - bootJar
+- Gradle: ./gradlew bootJar
 - docker build -f Dockerfile.h2 -t tms/yandex-dzen-c51 .
 - docker run -d -p 8080:8080 tms/yandex-dzen-c51
 - docker ps
@@ -33,11 +33,11 @@
 - H2 database: http://localhost:8080/db (JDBC URL: jdbc:h2:mem:db) 
 - Swagger: http://localhost:8080/swagger-ui/
 
-## Docker-compose (+ MySQL8 database) Developer version
+## Docker-compose (+ MySQL8 database) developer version
 
 ### Run the following commands to build and run the application:
 
-- Gradle - Task - build - bootJar
+- Gradle: ./gradlew bootJar
 - docker-compose build
 - docker-compose up -d
 - docker-compose ps
