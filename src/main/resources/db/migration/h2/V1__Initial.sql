@@ -6,7 +6,6 @@
         image varchar(255) not null,
         status integer,
         name varchar(255) not null,
-        status integer,
         post_id bigint, primary key (id)
     );
 
@@ -15,7 +14,6 @@
         create_date timestamp,
         status integer,
         description varchar(255),
-        status integer,
         post_id bigint, primary key (id)
     );
 
