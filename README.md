@@ -25,11 +25,12 @@
 
 ### Run the following commands to build and run the application:
 
-- Gradle: ./gradlew bootJar
+- git clone https://github.com/simonpirko/yandex-dzen-rest-c51.git
+- cd yandex-dzen-rest-c51
+- ./gradlew bootJar
 - docker build -f Dockerfile.h2 -t tms/yandex-dzen-c51 .
 - docker run -d -p 8080:8080 tms/yandex-dzen-c51
 - docker ps
-- port 8080
 - H2 database: http://localhost:8080/db (JDBC URL: jdbc:h2:mem:db) 
 - Swagger: http://localhost:8080/swagger-ui/
 
@@ -37,7 +38,9 @@
 
 ### Run the following commands to build and run the application:
 
-- Gradle: ./gradlew bootJar
+- git clone https://github.com/simonpirko/yandex-dzen-rest-c51.git
+- cd yandex-dzen-rest-c51
+- ./gradlew bootJar
 - docker-compose build
 - docker-compose up -d
 - docker-compose ps
