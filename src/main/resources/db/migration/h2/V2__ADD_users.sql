@@ -13,7 +13,7 @@ INSERT INTO category (count_subscriber, description, image, name, status, post_i
 VALUES (10, 'category about cars', 'imageTest1', 'cars', 1, 1);
 
 INSERT INTO category (count_subscriber, description, image, name, status, post_id)
-VALUES (11, 'category about cars', 'imageTest2', 'cars', 1, 2);
+VALUES (11, 'category about cars', 'imageTest2', 'cars2', 1, 2);
 
 INSERT INTO comments (create_date, description, status, post_id)
 VALUES ('2022-06-03T08:53:20.7460851','good car', 1, 1);
