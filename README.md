@@ -27,7 +27,7 @@
 
 - git clone https://github.com/simonpirko/yandex-dzen-rest-c51.git
 - cd yandex-dzen-rest-c51
-- ./gradlew bootJar
+- gradle bootJar
 - docker build -f Dockerfile.h2 -t tms/yandex-dzen-c51 .
 - docker run -d -p 8080:8080 tms/yandex-dzen-c51
 - docker ps
@@ -40,7 +40,7 @@
 
 - git clone https://github.com/simonpirko/yandex-dzen-rest-c51.git
 - cd yandex-dzen-rest-c51
-- ./gradlew bootJar
+- gradle bootJar
 - docker-compose build
 - docker-compose up -d
 - docker-compose ps
