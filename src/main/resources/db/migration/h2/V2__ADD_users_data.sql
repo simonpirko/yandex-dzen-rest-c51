@@ -22,25 +22,39 @@ VALUES ('Citroen_content_user1', '2022-06-03T08:53:22.7460851', 101, 1, 1, 'Citr
 
 INSERT INTO posts (contents, create_date, number_of_reads, post_type, status, title, user_id)
 VALUES ('Audi_content_user1','2022-06-03T08:53:23.7460851', 91, 1, 1, 'Audi_user1', 3);
---
--- INSERT INTO category (count_subscriber, description, image, name, status, post_id)
--- VALUES (10, 'category about cars', 'imageTest1', 'cars', 1, 1);
---
--- INSERT INTO category (count_subscriber, description, image, name, status, post_id)
--- VALUES (11, 'category about cars', 'imageTest2', 'cars2', 1, 2);
---
--- INSERT INTO comments (create_date, description, status, post_id)
--- VALUES ('2022-06-03T08:53:20.7460851','good car', 1, 1);
---
--- INSERT INTO comments (create_date, description, status, post_id)
--- VALUES ('2022-06-03T08:53:20.7460851','very good car', 1, 2);
+
+INSERT INTO category (count_subscriber, description, image, name, status, post_id)
+VALUES (10, 'category about cars', 'imageTest1', 'citroen', 1, 1);
+
+INSERT INTO category (count_subscriber, description, image, name, status, post_id)
+VALUES (11, 'category about cars', 'imageTest2', 'audi', 1, 2);
+
+INSERT INTO category (count_subscriber, description, image, name, status, post_id)
+VALUES (10, 'category about cars', 'imageTest1', 'citroen', 1, 3);
+
+INSERT INTO category (count_subscriber, description, image, name, status, post_id)
+VALUES (11, 'category about cars', 'imageTest2', 'audi', 1, 4);
+
+INSERT INTO comments (create_date, description, status, post_id)
+VALUES ('2022-06-03T08:54:24.7460851','good car', 1, 1);
+
+INSERT INTO comments (create_date, description, status, post_id)
+VALUES ('2022-06-03T08:59:20.7460851','very good car', 1, 2);
+
+INSERT INTO comments (create_date, description, status, post_id)
+VALUES ('2022-06-03T08:54:24.7460851','good car', 1, 3);
+
+INSERT INTO comments (create_date, description, status, post_id)
+VALUES ('2022-06-03T08:59:20.7460851','very good car', 1, 4);
 --
 -- INSERT INTO likes (post_id, user_id) VALUES (1, 1);
 --
 -- INSERT INTO  dislikes (post_id, user_id) VALUES (2, 1);
 --
--- INSERT INTO tags (name, status, post_id) VALUES ('aboutCar', 1, 1);
--- INSERT INTO tags (name, status, post_id) VALUES ('aboutCar', 1, 2);
+INSERT INTO tags (name, status, post_id) VALUES ('aboutCar', 1, 1);
+INSERT INTO tags (name, status, post_id) VALUES ('aboutCar', 1, 2);
+INSERT INTO tags (name, status, post_id) VALUES ('aboutCar', 1, 3);
+INSERT INTO tags (name, status, post_id) VALUES ('aboutCar', 1, 4);
 
 
 
