@@ -2,6 +2,7 @@ package by.tms.dzen.yandexdzenrestc51.controller;
 
 import by.tms.dzen.yandexdzenrestc51.dto.PostDTO;
 import by.tms.dzen.yandexdzenrestc51.entity.Post;
+import by.tms.dzen.yandexdzenrestc51.entity.Status;
 import by.tms.dzen.yandexdzenrestc51.exception.ForbiddenException;
 import by.tms.dzen.yandexdzenrestc51.exception.InvalidException;
 import by.tms.dzen.yandexdzenrestc51.exception.NotFoundException;
@@ -97,6 +98,7 @@ public class PostController {
         idValidator.validateUserId(userId);
 
         Post post = postMapper.postDTOToPost(postDto);
+        post.setStatus(Status.ACTIVE);
         post.setUser(userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User not found")));
 
         return ResponseEntity.ok(postService.save(post));
