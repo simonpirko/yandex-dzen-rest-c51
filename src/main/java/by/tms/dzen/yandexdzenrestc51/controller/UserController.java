@@ -96,7 +96,8 @@ public class UserController {
     @PutMapping(value = "/{username}", produces = "application/json")
     public ResponseEntity<User> update(@ApiParam(value = "username that need to be updated", example = "username")
                                        @PathVariable("username") String username,
-                                       @ApiParam(value = "Updated user object", example = "User") @Valid @RequestBody User user,
+                                       @ApiParam(value = "Updated user object", example = "User")
+                                       @Valid @RequestBody User user,
                                        BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
@@ -106,8 +107,13 @@ public class UserController {
         if (username == null | userRepository.findByUsername(username).isEmpty()) {
             throw new NotFoundException();
         }
+
         User update = userRepository.findByUsername(username).get();
         user.setId(update.getId());
+        user.setRoleList(update.getRoleList());
+        user.setStatus(update.getStatus());
+        user.setPosts(update.getPosts());
+        user.setSubscriberList(update.getSubscriberList());
         userService.update(user);
 
         return ResponseEntity.ok(update);
